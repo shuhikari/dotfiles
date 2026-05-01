@@ -1,0 +1,89 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "ignore": [
+      "node_modules",
+      "dist",
+      "build",
+      ".next",
+      ".nuxt",
+      "coverage",
+      "*.lock",
+      "pnpm-lock.yaml",
+      "package-lock.json",
+      "yarn.lock"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100,
+    "lineEnding": "lf"
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "complexity": {
+        "noExcessiveCognitiveComplexity": {
+          "level": "warn",
+          "options": { "maxAllowedComplexity": 15 }
+        },
+        "noUselessTypeConstraint": "error"
+      },
+      "correctness": {
+        "noUnusedVariables": "error",
+        "noUnusedImports": "error",
+        "useExhaustiveDependencies": "warn"
+      },
+      "style": {
+        "noNonNullAssertion": "warn",
+        "useImportType": "error",
+        "useExportType": "error",
+        "noParameterAssign": "error"
+      },
+      "suspicious": {
+        "noConsoleLog": "warn",
+        "noExplicitAny": "warn",
+        "noEmptyBlockStatements": "error"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "error"
+      },
+      "performance": {
+        "noBarrelFile": "warn",
+        "noReExportAll": "warn"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "jsxQuoteStyle": "double",
+      "trailingCommas": "all",
+      "semicolons": "always",
+      "arrowParentheses": "always",
+      "bracketSpacing": true
+    }
+  },
+  "json": {
+    "formatter": {
+      "indentWidth": 2,
+      "trailingCommas": "none"
+    },
+    "parser": {
+      "allowComments": true,
+      "allowTrailingCommas": false
+    }
+  },
+  "organizeImports": {
+    "enabled": true
+  }
+}

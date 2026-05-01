@@ -1,0 +1,46 @@
+# EditorConfig — https://editorconfig.org
+# Universal: respeitado por VSCode, JetBrains, Vim/Neovim, Notepad++, Sublime,
+# IntelliJ, Eclipse, e basicamente qualquer editor moderno.
+#
+# Garante consistência mínima de estilo independente do editor que cada dev usa.
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# Markdown precisa preservar trailing whitespace (significado em line break)
+[*.md]
+trim_trailing_whitespace = false
+
+# Makefiles exigem tabs (sintaxe-required)
+[Makefile]
+indent_style = tab
+
+# YAML é frescurento com indentação
+[*.{yml,yaml}]
+indent_size = 2
+
+# package.json formatado com 2 espaços (npm convention)
+[{package.json,package-lock.json}]
+indent_size = 2
+
+# Go usa tabs por convenção
+[*.go]
+indent_style = tab
+
+# Python segue PEP-8 (4 espaços)
+[*.py]
+indent_size = 4
+
+# Shell scripts
+[*.{sh,bash,zsh}]
+indent_size = 2
+
+# Windows: Git Bash respeita LF; mas se algum editor for criar com CRLF, .gitattributes
+# do projeto deve forçar LF nesses arquivos.

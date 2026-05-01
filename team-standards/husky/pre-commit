@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+# .husky/pre-commit
+#
+# Roda lint-staged: aplica biome nos arquivos staged.
+# Rápido (~1-2s pra commits típicos).
+
+# Detecta package manager
+if [ -f "pnpm-lock.yaml" ]; then
+  pnpm exec lint-staged
+elif [ -f "yarn.lock" ]; then
+  yarn lint-staged
+else
+  npx lint-staged
+fi

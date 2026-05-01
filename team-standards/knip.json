@@ -1,0 +1,38 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "src/main.ts",
+    "src/**/*.spec.ts",
+    "src/**/*.e2e-spec.ts",
+    "test/**/*.ts"
+  ],
+  "project": [
+    "src/**/*.ts",
+    "test/**/*.ts"
+  ],
+  "ignore": [
+    "**/dist/**",
+    "**/build/**",
+    "**/node_modules/**",
+    "**/*.d.ts"
+  ],
+  "ignoreDependencies": [
+    "@nestjs/cli",
+    "@types/node",
+    "ts-node",
+    "ts-loader",
+    "tsconfig-paths"
+  ],
+  "ignoreBinaries": [
+    "nest"
+  ],
+  "rules": {
+    "files": "error",
+    "dependencies": "error",
+    "unlisted": "error",
+    "binaries": "warn",
+    "exports": "warn",
+    "types": "warn",
+    "duplicates": "warn"
+  }
+}

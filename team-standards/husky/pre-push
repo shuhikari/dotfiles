@@ -1,0 +1,51 @@
+#!/usr/bin/env sh
+# .husky/pre-push
+#
+# Roda type-check + tests afetados + dead code detection.
+# ~10-30s dependendo do tamanho do projeto.
+#
+# Pra pular emergencialmente: git push --no-verify
+
+# Detecta package manager
+if [ -f "pnpm-lock.yaml" ]; then
+  PM_RUN="pnpm exec"
+elif [ -f "yarn.lock" ]; then
+  PM_RUN="yarn"
+else
+  PM_RUN="npx"
+fi
+
+echo "→ Type checking..."
+$PM_RUN tsc --noEmit || {
+  echo "❌ TypeScript errors found. Push abortado."
+  exit 1
+}
+
+echo "→ Running affected tests..."
+# vitest related: roda só os testes afetados pelas mudanças
+# Fallback pra todos os testes se vitest não estiver disponível
+if $PM_RUN vitest --version >/dev/null 2>&1; then
+  CHANGED_FILES=$(git diff --name-only origin/HEAD...HEAD 2>/dev/null | tr '\n' ' ')
+  if [ -n "$CHANGED_FILES" ]; then
+    $PM_RUN vitest related --run $CHANGED_FILES || {
+      echo "❌ Tests failed. Push abortado."
+      exit 1
+    }
+  fi
+elif $PM_RUN jest --version >/dev/null 2>&1; then
+  CHANGED_FILES=$(git diff --name-only origin/HEAD...HEAD 2>/dev/null | tr '\n' ' ')
+  if [ -n "$CHANGED_FILES" ]; then
+    $PM_RUN jest --findRelatedTests $CHANGED_FILES --passWithNoTests || {
+      echo "❌ Tests failed. Push abortado."
+      exit 1
+    }
+  fi
+fi
+
+echo "→ Checking for dead code..."
+$PM_RUN knip --no-progress --reporter compact || {
+  echo "⚠️  knip encontrou exports/files não usados. Revise e remova ou ignore em knip.json."
+  exit 1
+}
+
+echo "✅ Pre-push checks passed."

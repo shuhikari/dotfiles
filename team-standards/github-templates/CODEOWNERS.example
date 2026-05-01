@@ -1,0 +1,35 @@
+# CODEOWNERS — quem precisa aprovar PR em cada parte do código.
+# Renomeia este arquivo pra CODEOWNERS (sem .example) e ajusta paths/usernames.
+#
+# Sintaxe: <pattern> <owner1> <owner2>
+# Owners podem ser usernames (@user) ou teams (@org/team-name).
+#
+# Docs: https://docs.github.com/en/repositories/managing-your-repositories-growth/managing-the-default-branch-name
+
+# Default — todos os arquivos exigem approval do tech lead se ninguém mais foi designado
+*                                       @SEU-USERNAME
+
+# Backend
+/src/services/                          @SEU-USERNAME @backend-lead
+/src/repositories/                      @SEU-USERNAME @backend-lead
+/prisma/                                @SEU-USERNAME @database-owner
+
+# Frontend
+/src/components/                        @frontend-lead
+/src/pages/                             @frontend-lead
+
+# DevOps / infra
+/.github/                               @devops-lead
+/docker-compose*.yml                    @devops-lead
+/Dockerfile*                            @devops-lead
+/scripts/                               @devops-lead
+
+# Documentação importante (pra evitar deriva)
+/README.md                              @SEU-USERNAME
+/CONTRIBUTING.md                        @SEU-USERNAME
+/docs/adr/                              @SEU-USERNAME
+
+# Configs sensíveis
+/biome.json                             @SEU-USERNAME
+/knip.json                              @SEU-USERNAME
+/.husky/                                @SEU-USERNAME

@@ -1,0 +1,18 @@
+# Configs locais com secrets
+zsh/local.zsh
+
+# Backups gerados pelo install.sh
+.dotfiles-backup-*
+
+# OS specific
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS .app gerados pelo setup-open-in-lvim.sh ficam fora do repo

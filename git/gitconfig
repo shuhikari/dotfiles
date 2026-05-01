@@ -1,0 +1,272 @@
+# ~/dotfiles/git/gitconfig
+# Mantida toda a estrutura original com 6 melhorias propostas (veja ADR-009)
+
+[user]
+	name = Édipo Maciel | 'Shu'
+	email = edipo@auditore.com.br
+
+[init]
+	defaultBranch = main
+
+[push]
+	default = current
+
+[core]
+	whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+	editor = lvim
+	autocrlf = input
+
+# =====================================================================
+# Melhorias propostas (decisões em docs/adr/009-gitconfig-improvements.md)
+# =====================================================================
+
+[pull]
+	rebase = true                # rebase em vez de merge no pull (histórico linear)
+
+[rerere]
+	enabled = true               # reuse recorded resolutions (resolve conflito 1x, lembra)
+	autoUpdate = true
+
+[branch]
+	sort = -committerdate        # branches mais recentes primeiro em `git branch`
+
+[column]
+	ui = auto                    # listas em colunas quando faz sentido (branches, tags)
+
+[rebase]
+	autoSquash = true            # auto-squash com commits "fixup!" e "squash!"
+	autoStash = true             # stash automático antes de rebase
+
+[commit]
+	verbose = true               # mostra diff no editor da mensagem de commit
+
+[diff]
+	algorithm = histogram        # melhor que o default em diffs com refactors
+	colorMoved = default         # destaca código movido vs adicionado
+
+[merge]
+	conflictStyle = zdiff3       # mostra ancestor comum nos conflict markers
+
+# =====================================================================
+# Conditional includes — identidade por diretório
+# =====================================================================
+# Cada inclui só é carregado se o repo está no path correspondente.
+# Útil pra alternar email/signing key entre auditore/tegra/clientes sem
+# pensar a cada `git commit`.
+
+[includeIf "gitdir:~/ws/auditore/"]
+	path = ~/dotfiles/git/gitconfig-auditore
+
+[includeIf "gitdir:~/ws/tegra/"]
+	path = ~/dotfiles/git/gitconfig-tegra
+
+[includeIf "gitdir:~/ws/byd/"]
+	path = ~/dotfiles/git/gitconfig-auditore
+
+# =====================================================================
+# Cores
+# =====================================================================
+
+[color]
+	ui = auto
+	interactive = auto
+
+[color "branch"]
+	current = yellow bold
+	local = green bold
+	remote = cyan bold
+
+[color "diff"]
+	meta = yellow bold
+	frag = magenta bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+
+[color "status"]
+	added = green bold
+	changed = yellow bold
+	untracked = red bold
+
+# =====================================================================
+# Pretty / aliases
+# =====================================================================
+
+[pretty]
+	graph = format:%Cblue%h%d%Creset%20%s
+
+[alias]
+	# Status
+	st = !GIT_PAGER= git status
+	s = status
+	sb = status -s -b
+
+	# Stash
+	sa = stash apply
+	sc = stash clear
+	sd = stash drop
+	sl = stash list
+	sp = stash pop
+	ss = stash save
+	sw = stash show
+
+	# Diff
+	d = diff
+	dc = diff --cached
+	dl = difftool
+	dlc = difftool --cached
+	dk = diff --check
+	dp = diff --patience
+	dck = diff --cached --check
+
+	# Commit
+	c = commit
+	ca = commit -a
+	ci = commit
+	cm = commit -m
+	cam = commit -am
+	cd = commit --amend
+	cad = commit -a --amend
+
+	# Add
+	a = add .
+	ai = add -i
+
+	# Apply patches
+	ap = apply
+	as = apply --stat
+	ac = apply --check
+
+	# am
+	ama = am --abort
+	amr = am --resolved
+	ams = am --skip
+
+	# Log
+	l = log --oneline
+	lg = log --oneline --graph --decorate
+	lp = log -p
+	ll = log --graph --pretty=format:%Cblue%h%d%Creset%x20%s
+	la = log --graph --pretty=format:%Cblue%h%d%Creset%x20%s --all
+	llg = log --graph --format=format:'%C(yellow)%h%C(reset) %C(red)- %an%C(reset) - %C(white)%s%C(reset) %C(bold yellow)%d%C(reset) %C(green)(%ar)%C(reset)' --abbrev-commit --date=short
+	ls = ls-files
+
+	# Checkout
+	o = checkout
+	co = checkout
+	ob = checkout -b
+
+	# Branch
+	b = branch
+	br = branch
+	ba = branch -a
+	bd = branch -d
+	bsort = branch -a --sort=-committerdate
+
+	# Fetch
+	f = fetch
+	fo = fetch origin
+	fp = format-patch
+	fk = fsck
+
+	# Merge
+	m = merge
+	ma = merge --abort
+	mc = merge --continue
+	ms = merge --skip
+
+	# Prune
+	pr = prune -v
+
+	# Push
+	ps = push
+	psf = push -f
+	psu = push -u
+	pso = push origin
+	psfo = push -f origin
+	psuo = push -u origin
+	psom = push origin main
+	psos = push origin staging
+	psod = push origin dev
+	psode = push origin develop
+	psodev = push origin development
+	psodt = push origin dev --tags
+	psost = push origin staging --tags
+
+	# Pull
+	pl = pull
+	plu = pull -u
+	plo = pull origin
+	plp = pull upstream
+	plom = pull origin main
+	plpm = pull upstream main
+	plod = pull origin dev
+	plode = pull origin develop
+	plodev = pull origin development
+	plos = pull origin staging
+	pb = pull --rebase
+	pbo = pull --rebase origin
+	pbp = pull --rebase upstream
+	pbom = pull --rebase origin master
+	pbpm = pull --rebase upstream master
+
+	# Rebase
+	rb = rebase
+	rba = rebase --abort
+	rbc = rebase --continue
+	rbi = rebase --interactive
+	rbs = rebase --skip
+
+	# Reset
+	re = reset
+	rh = reset HEAD
+	reh = reset --hard
+	rem = reset --mixed
+	res = reset --soft
+	rehh = reset --hard HEAD
+	remh = reset --mixed HEAD
+	resh = reset --soft HEAD
+
+	# Remote
+	r = remote
+	ra = remote add
+	rm = remote rm
+	rv = remote -v
+	rp = remote prune
+	rs = remote show
+	rso = remote show origin
+	rpo = remote prune origin
+
+	# Show
+	w = show
+	wp = show -p
+	wr = show -p --no-color
+
+	# Utilities
+	assume = update-index --assume-unchanged
+	unassume = update-index --no-assume-unchanged
+	assumed = "!git ls-files -v | grep ^h | cut -c 3-"
+	snapshot = !git stash save \"snapshot: $(date)\" && git stash apply \"stash@{0}\"
+	ours   = "!f() { git checkout --ours $@ && git add $@; }; f"
+	theirs = "!f() { git checkout --theirs $@ && git add $@; }; f"
+	human = name-rev --name-only --refs=refs/heads/*
+
+# =====================================================================
+# LFS
+# =====================================================================
+
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+
+# =====================================================================
+# Diff/merge tools
+# =====================================================================
+
+[diff]
+	tool = vimdiff
+
+[difftool]
+	prompt = false

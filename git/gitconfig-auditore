@@ -1,0 +1,13 @@
+# ~/dotfiles/git/gitconfig-auditore
+# Carregado via includeIf quando o repo está em ~/ws/auditore/ ou ~/ws/byd/
+
+[user]
+	email = edipo@auditore.com.br
+
+# Adicione aqui qualquer config específica do contexto Auditore.
+# Exemplo: signing key diferente, hooks, etc.
+#
+# [user]
+#   signingkey = SUA_GPG_KEY_AUDITORE
+# [commit]
+#   gpgsign = true

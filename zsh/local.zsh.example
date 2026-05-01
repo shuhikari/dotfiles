@@ -1,0 +1,32 @@
+# ~/dotfiles/zsh/local.zsh.example
+#
+# Copie este arquivo pra local.zsh (que é gitignored) e ajuste por máquina.
+# Use pra:
+#   - API keys que NÃO devem ser comitadas
+#   - Paths específicos da máquina
+#   - Aliases temporários de projeto
+#   - Overrides de exports da equipe
+#
+# cp ~/dotfiles/zsh/local.zsh.example ~/dotfiles/zsh/local.zsh
+
+# =====================================================================
+# API keys (NUNCA comitar)
+# =====================================================================
+
+# export ANTHROPIC_API_KEY="..."
+# export GEMINI_API_KEY="..."
+# export OPENROUTER_API_KEY="..."
+# export OPENAI_API_KEY="..."
+
+# =====================================================================
+# Paths específicos da máquina
+# =====================================================================
+
+# Por exemplo, se Android Studio estiver em outro local nessa máquina:
+# export ANDROID_APP="/Applications/Android Studio.app"
+
+# =====================================================================
+# Aliases de projeto temporários
+# =====================================================================
+
+# alias projx='cd ~/ws/cliente-x && nvm use'
