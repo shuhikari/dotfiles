@@ -1,5 +1,0 @@
-# ~/dotfiles/git/gitconfig-tegra
-# Carregado via includeIf quando o repo está em ~/ws/tegra/
-
-[user]
-	email = edipo.rosa@tegra.com.br

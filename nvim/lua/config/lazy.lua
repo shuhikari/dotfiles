@@ -27,15 +27,15 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.lang.markdown" },
     { import = "lazyvim.plugins.extras.lang.prisma" },
     { import = "lazyvim.plugins.extras.linting.eslint" },
-    { import = "lazyvim.plugins.extras.formatting.biome" },
+    { import = "lazyvim.plugins.extras.lang.typescript.biome" },
     { import = "lazyvim.plugins.extras.editor.aerial" },
     { import = "lazyvim.plugins.extras.editor.refactoring" },
     { import = "lazyvim.plugins.extras.editor.telescope" },
-    -- { import = "lazyvim.plugins.extras.coding.copilot" }, -- ative se usar Copilot
+    -- { import = "lazyvim.plugins.extras.coding.copilot" }, -- comenta se não usar Copilot
     { import = "lazyvim.plugins.extras.dap.core" },
     { import = "lazyvim.plugins.extras.test.core" },
     { import = "lazyvim.plugins.extras.util.dot" },
-    -- { import = "lazyvim.plugins.extras.ui.mini-animate" }, -- desativado (causa lag em SSH)
+    -- { import = "lazyvim.plugins.extras.ui.mini-animate" },
 
     -- Customizações próprias
     { import = "plugins" },

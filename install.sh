@@ -60,6 +60,33 @@ link() {
   info "Linked: $dst"
 }
 
+# Renderiza um .example para o arquivo real, substituindo placeholders {{VAR}}.
+# Não sobrescreve se o destino já existir (idempotente).
+render_template() {
+  local example="$1" target="$2"
+  shift 2
+  [[ -f $target ]] && return 0
+  [[ -f $example ]] || { error "Template não existe: $example"; return 1; }
+  local tmp; tmp=$(mktemp)
+  cp "$example" "$tmp"
+  while [[ $# -gt 0 ]]; do
+    local placeholder="$1" value="$2"; shift 2
+    if [[ "$OS" == "macos" ]]; then
+      sed -i '' "s|{{${placeholder}}}|${value}|g" "$tmp"
+    else
+      sed -i "s|{{${placeholder}}}|${value}|g" "$tmp"
+    fi
+  done
+  mv "$tmp" "$target"
+  info "Gerado: $target (a partir de $(basename "$example"))"
+}
+
+prompt_default() {
+  local prompt="$1" default="$2" reply
+  read -r -p "$prompt [$default]: " reply
+  echo "${reply:-$default}"
+}
+
 # ----- Cross-OS (sempre linka) -----
 
 # Neovim (LazyVim)
@@ -71,7 +98,28 @@ link "$DOTFILES_DIR/tmux/tmux.conf" "$HOME/.tmux.conf"
 # zsh
 link "$DOTFILES_DIR/zsh/zshrc" "$HOME/.zshrc"
 
-# git
+# ----- git (gera arquivos reais a partir dos .example, gitignored) -----
+
+if [[ ! -f "$DOTFILES_DIR/git/gitconfig" ]]; then
+  warn "Configurando identidade git (rodado só na primeira instalação)."
+  GIT_NAME=$(prompt_default "Nome completo" "$(git config --global user.name 2>/dev/null || echo)")
+  GIT_EMAIL=$(prompt_default "Email principal" "$(git config --global user.email 2>/dev/null || echo)")
+  AUDITORE_EMAIL=$(prompt_default "Email Auditore (~/ws/auditore e ~/ws/byd)" "$GIT_EMAIL")
+  TEGRA_EMAIL=$(prompt_default "Email Tegra (~/ws/tegra) — Enter pra pular" "")
+
+  render_template "$DOTFILES_DIR/git/gitconfig.example" \
+                  "$DOTFILES_DIR/git/gitconfig" \
+                  GIT_NAME "$GIT_NAME" GIT_EMAIL "$GIT_EMAIL"
+  render_template "$DOTFILES_DIR/git/gitconfig-auditore.example" \
+                  "$DOTFILES_DIR/git/gitconfig-auditore" \
+                  AUDITORE_EMAIL "$AUDITORE_EMAIL"
+  if [[ -n $TEGRA_EMAIL ]]; then
+    render_template "$DOTFILES_DIR/git/gitconfig-tegra.example" \
+                    "$DOTFILES_DIR/git/gitconfig-tegra" \
+                    TEGRA_EMAIL "$TEGRA_EMAIL"
+  fi
+fi
+
 link "$DOTFILES_DIR/git/gitconfig" "$HOME/.gitconfig"
 
 # Claude Code custom commands
@@ -115,7 +163,8 @@ case "$OS" in
     echo "  1. exec zsh (recarrega shell)"
     echo "  2. ./macos/migrate-to-lazyvim.sh (se ainda em LunarVim)"
     echo "  3. nvim (inicializa Lazy + Mason)"
-    echo "  4. Em projetos: ./team-standards/setup-project.sh"
+    echo "  4. ./macos/setup-open-in-nvim.sh (opcional: 'Open With Neovim' no Finder)"
+    echo "  5. Em projetos: ./team-standards/setup-project.sh"
     ;;
   wsl|linux)
     info "Próximos passos (WSL/Linux):"

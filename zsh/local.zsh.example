@@ -30,3 +30,10 @@
 # =====================================================================
 
 # alias projx='cd ~/ws/cliente-x && nvm use'
+
+# =====================================================================
+# Atalhos de Google Drive (caminhos contêm o email da conta — pessoais)
+# =====================================================================
+
+# alias d-empresa='cd "$HOME/Library/CloudStorage/GoogleDrive-voce@empresa.com"'
+# alias d-cliente='cd "$HOME/Library/CloudStorage/GoogleDrive-voce@cliente.com/Meu Drive/Pasta"'

@@ -8,15 +8,15 @@ evoluir junto com o workflow.
 ```
 dotfiles/
 ├── README.md                    Este arquivo
-├── install.sh                   Symlinks dos dotfiles pessoais (Mac)
+├── install.sh                   Symlinks dos dotfiles (cross-OS: macOS/WSL/Linux)
 │
-├── lvim/                        LunarVim config (vtsls, inlay hints, telescope LSP)
+├── nvim/                        LazyVim config (vtsls, inlay hints, telescope LSP)
 ├── tmux/                        Sessões persistentes, splits, vim-style nav
 ├── zsh/                         Modular: zshrc + exports + aliases + functions
 ├── git/                         gitconfig + conditional includes (auditore/tegra)
 ├── aerospace.toml               Tiling WM com workspace P pra apresentação
 ├── claude/commands/             /review e /spec slash commands
-├── macos/                       Setup específico Mac (Open in LunarVim)
+├── macos/                       Setup específico Mac (Open in Neovim, migração)
 │
 ├── team-standards/              Padrões cross-platform (Mac/Linux/Windows)
 │   ├── setup-project.sh         Instala husky+biome+knip num projeto
@@ -37,7 +37,7 @@ dotfiles/
     └── adr/                     Architecture Decision Records
         ├── README.md
         ├── 001 — AeroSpace tiling
-        ├── 002 — LunarVim como editor primário
+        ├── 002 — LunarVim como editor primário (superseded por 013)
         ├── 003 — Claude Code CLI strategy
         ├── 004 — Estrutura modular dos dotfiles
         ├── 005 — tmux pra sessões persistentes
@@ -47,7 +47,9 @@ dotfiles/
         ├── 009 — Melhorias no gitconfig
         ├── 010 — Cross-platform strategy
         ├── 011 — Overseer no Oracle Free Tier
-        └── 012 — Blog técnico público
+        ├── 012 — Blog técnico público
+        ├── 013 — Migração LunarVim → LazyVim
+        └── 014 — Suporte a WSL2 nos dotfiles
 ```
 
 ## Instalação
@@ -57,10 +59,10 @@ dotfiles/
 ```bash
 git clone <este-repo> ~/dotfiles
 cd ~/dotfiles
-./install.sh
+./install.sh   # Pergunta nome/email pro git na primeira instalação
 
 # Opcional
-./macos/setup-open-in-lvim.sh   # Finder → Open With LunarVim
+./macos/setup-open-in-nvim.sh   # Finder → Open With Neovim
 ```
 
 ### WSL2 (Windows)
@@ -72,10 +74,11 @@ cd ~/dotfiles
 # Dentro do WSL:
 sudo apt update && sudo apt install -y git
 git clone <este-repo> ~/dotfiles
-bash ~/dotfiles/wsl/setup.sh
+bash ~/dotfiles/wsl/setup.sh   # Instala stack completa (~10 min)
+~/dotfiles/install.sh          # Symlinks + identidade git
 ```
 
-Setup completo em ~10 min. Detalhes em [wsl/README.md](wsl/README.md).
+Detalhes em [wsl/README.md](wsl/README.md) e [docs/adr/014-wsl2-support.md](docs/adr/014-wsl2-support.md).
 
 ### Time (qualquer plataforma)
 
@@ -99,7 +102,7 @@ Cada mudança importante = ADR. Cada decisão arquitetural = ADR.
 # 2. Documenta decisão se for relevante
 cp team-standards/docs-templates/adr-template.md docs/adr/0XX-titulo.md
 # 3. Commit Conventional
-git commit -am "feat(lvim): adiciona keymap pra X"
+git commit -am "feat(nvim): adiciona keymap pra X"
 # 4. Push
 git push
 
@@ -120,8 +123,10 @@ git pull && ./install.sh
 
 ```bash
 # Mac
-brew install --cask ghostty lunarvim
-brew install tmux gh eza
+brew install --cask ghostty
+brew install tmux gh eza lazygit fzf
+asdf plugin add neovim https://github.com/richin13/asdf-neovim.git
+asdf install neovim latest && asdf set -u neovim latest
 brew install --cask nikitabobko/tap/aerospace
 
 # Windows nativo: ver docs/windows-setup.md
@@ -138,7 +143,7 @@ Variáveis de ambiente em `zsh/local.zsh` (gitignored):
 
 | Sintoma | Solução |
 |---|---|
-| LunarVim travado pós-update | `lvim +":Lazy sync" +qa` |
+| LazyVim travado pós-update | `nvim +":Lazy sync" +qa` |
 | tmux config não recarrega | `tmux kill-server && tmux` |
 | Symlinks corrompidos | `./install.sh` recria |
 | Setup-project quebrou em existente | Verifica logs; remove `.husky/` e tenta de novo |
@@ -147,7 +152,7 @@ Variáveis de ambiente em `zsh/local.zsh` (gitignored):
 
 ## Recursos
 
-- [CHEATSHEET](docs/CHEATSHEET.md) — atalhos lvim, tmux, aliases
+- [CHEATSHEET](docs/CHEATSHEET.md) — atalhos nvim, tmux, aliases
 - [Code review workflow](docs/code-review-workflow.md) — pipeline detalhado
 - [Windows setup](docs/windows-setup.md) — guia cross-platform
 - [Overseer architecture](docs/overseer-architecture.md) — Oracle Free Tier setup

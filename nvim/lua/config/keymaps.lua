@@ -35,9 +35,9 @@ map("n", "<leader>uh", function()
 end, { desc = "Toggle inlay hints" })
 
 -- =====================================================================
--- Trouble — atalhos consistentes com hábito do LunarVim
+-- Trouble — atalhos do LazyVim
 -- =====================================================================
--- LazyVim usa <leader>x por default; mantém consistente com lvim.
+-- LazyVim usa <leader>x por default.
 
 map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (Trouble)" })
 map("n", "<leader>xd", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", { desc = "Buffer diagnostics" })

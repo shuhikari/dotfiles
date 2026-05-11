@@ -53,13 +53,13 @@ if command -v eza >/dev/null 2>&1; then
   alias ls='eza --group-directories-first'
   alias ll='eza -l --git --group-directories-first --icons=auto'
   alias la='eza -la --git --group-directories-first --icons=auto'
-  alias lr='eza -l --sort=modified --reverse --git --icons=auto'  # mais recentes no fim
+  # lr → ver functions.zsh (aceita -g pra agrupar pastas, -n N pra limitar, -t pra inverter)
   alias lt='eza --tree --level=2 --git-ignore --icons=auto'
   alias lt3='eza --tree --level=3 --git-ignore --icons=auto'
 else
   alias ll='ls -lh'
   alias la='ls -lha'
-  alias lr='ls -ltrh'  # mais recentes no fim
+  # lr → ver functions.zsh
 fi
 
 # =====================================================================
@@ -135,12 +135,11 @@ alias v-minor='git plos && pnpm version minor && git psost'
 alias v-major='git plos && pnpm version major && git psost'
 
 # =====================================================================
-# Navegação rápida (mantidos do original)
+# Navegação rápida
 # =====================================================================
+# Aliases pessoais de Google Drive (contêm email da conta) ficam em
+# zsh/local.zsh (gitignored). Veja zsh/local.zsh.example para o template.
 
-alias d-tegra='cd "$HOME/Library/CloudStorage/GoogleDrive-edipo.rosa@tegra.com.br"'
-alias d-report='cd "$HOME/Library/CloudStorage/GoogleDrive-edipo.rosa@tegra.com.br/Meu Drive/Report Evidências"'
-alias d-auditore='cd "$HOME/Library/CloudStorage/GoogleDrive-edipo@auditore.com.br"'
 alias obsidian-setup='cd "$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents"'
 
 # =====================================================================

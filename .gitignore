@@ -1,6 +1,14 @@
 # Configs locais com secrets
 zsh/local.zsh
 
+# Git identity (gerados a partir dos .example pelo install.sh)
+git/gitconfig
+git/gitconfig-auditore
+git/gitconfig-tegra
+
+# Claude Code permissions específicas da máquina
+.claude/settings.local.json
+
 # Backups gerados pelo install.sh
 .dotfiles-backup-*
 
@@ -15,4 +23,4 @@ desktop.ini
 *.swp
 *.swo
 
-# macOS .app gerados pelo setup-open-in-lvim.sh ficam fora do repo
+# macOS .app gerados pelo setup-open-in-nvim.sh ficam fora do repo

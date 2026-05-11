@@ -47,18 +47,4 @@ return {
       focus = true,
     },
   },
-
-  -- Conform: silencia formatters que não usamos no nosso stack
-  -- Biome cobre JS/TS/JSON; não precisamos de prettier, fish_indent, markdownlint-cli2.
-  {
-    "stevearc/conform.nvim",
-    opts = function(_, opts)
-      opts.formatters_by_ft = opts.formatters_by_ft or {}
-      -- Remove formatters padrão que não usamos
-      opts.formatters_by_ft.fish = nil
-      -- Markdown: usa só markdownlint se tiver, senão deixa sem formatter
-      opts.formatters_by_ft.markdown = { "markdownlint-cli2", stop_after_first = true }
-      return opts
-    end,
-  },
 }

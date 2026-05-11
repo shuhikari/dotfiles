@@ -39,19 +39,46 @@ ts() {
 # Listagem
 # =====================================================================
 
-# lsn: top N arquivos mais recentes (default 10)
-# Uso: lsn          → 10 mais recentes da pasta atual
-#      lsn 5        → 5 mais recentes
-#      lsn 20 ~/Downloads
-lsn() {
-  local n=${1:-10}
-  local path=${2:-.}
+# lr: lista por data de modificação (padrão: mais recentes no fim, junto do prompt)
+# Uso: lr [-g] [-t] [-n N] [path...]
+#   -g    agrupa pastas separadamente (padrão: misturado)
+#   -t    inverte: mais recentes no topo (com -n N, lista os N mais recentes)
+#   -n N  limita aos N primeiros da listagem (combina com -t pra top N recentes)
+lr() {
+  emulate -L zsh
+  local group=0 limit=0 top=0
+  while [[ $1 == -* ]]; do
+    case "$1" in
+      -g) group=1; shift ;;
+      -t) top=1; shift ;;
+      -n) limit=$2; shift 2 ;;
+      --) shift; break ;;
+      *) break ;;
+    esac
+  done
   if command -v eza >/dev/null 2>&1; then
-    eza -l --sort=modified --reverse --git "$path" | head -$n
+    local -a opts
+    opts=(-l --git --icons=auto --sort=modified)
+    (( group )) && opts+=(--group-directories-first)
+    (( top )) && opts+=(--reverse)  # eza --sort=modified ASC = antigos primeiro / recentes no fim
+    if (( limit > 0 )); then
+      eza "${opts[@]}" "$@" | head -n "$limit"
+    else
+      eza "${opts[@]}" "$@"
+    fi
   else
-    ls -lth "$path" | head -$((n + 1))
+    local flags='-ltrh'
+    (( top )) && flags='-lth'
+    if (( limit > 0 )); then
+      ls $flags "$@" | head -n $((limit + 1))
+    else
+      ls $flags "$@"
+    fi
   fi
 }
+
+# lsn: alias retrocompatível (top N mais recentes)
+lsn() { lr -n "${1:-10}" "${@:2}"; }
 
 # =====================================================================
 # GitHub

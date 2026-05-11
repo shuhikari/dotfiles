@@ -1,9 +1,12 @@
-# ~/dotfiles/git/gitconfig
-# Mantida toda a estrutura original com 6 melhorias propostas (veja ADR-009)
+# ~/dotfiles/git/gitconfig.example
+#
+# Template versionado. O install.sh gera ~/dotfiles/git/gitconfig real
+# substituindo {{GIT_NAME}} e {{GIT_EMAIL}} pelos seus dados.
+# O gitconfig real é gitignored.
 
 [user]
-	name = Édipo Maciel | 'Shu'
-	email = edipo@auditore.com.br
+	name = {{GIT_NAME}}
+	email = {{GIT_EMAIL}}
 
 [init]
 	defaultBranch = main
@@ -13,7 +16,7 @@
 
 [core]
 	whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
-	editor = lvim
+	editor = nvim
 	autocrlf = input
 
 # =====================================================================

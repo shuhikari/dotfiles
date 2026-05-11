@@ -187,7 +187,7 @@ Prefix = `C-a`
 | `rl` | source ~/.zshrc |
 | `mkcd` | mkdir + cd |
 | `dotr` | cd ~/dotfiles |
-| `zshconfig` / `gitconfig` | edita config no lvim |
+| `zshconfig` / `gitconfig` | edita config no nvim |
 
 ---
 

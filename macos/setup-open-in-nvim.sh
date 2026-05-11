@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
-# setup-open-in-lvim.sh
+# setup-open-in-nvim.sh
 #
-# Cria um app "Open in LunarVim.app" em /Applications que recebe arquivos
-# do Finder (Open With...) e abre no Ghostty rodando lvim.
+# Cria um app "Open in Neovim.app" em /Applications que recebe arquivos
+# do Finder (Open With...) e abre no Ghostty rodando nvim (LazyVim).
 #
 # Uso:
-#   ./setup-open-in-lvim.sh
+#   ./setup-open-in-nvim.sh
 #
 # Depois:
 #   1. No Finder, click direito num arquivo .ts/.js/.md → Open With → Other...
-#   2. Marca "Always Open With", seleciona "Open in LunarVim"
+#   2. Marca "Always Open With", seleciona "Open in Neovim"
 #   3. Pra fazer default em TODOS arquivos do tipo: Get Info (⌘I) →
-#      Open With → escolhe "Open in LunarVim" → "Change All..."
+#      Open With → escolhe "Open in Neovim" → "Change All..."
 
 set -euo pipefail
 
-APP_NAME="Open in LunarVim"
+APP_NAME="Open in Neovim"
 APP_DIR="/Applications/${APP_NAME}.app"
-EXECUTABLE_NAME="open-in-lvim"
+EXECUTABLE_NAME="open-in-nvim"
 
 # Cores
 GREEN='\033[0;32m'
@@ -33,7 +33,7 @@ error() { echo -e "${RED}[error]${NC} $*"; exit 1; }
 
 [[ "$(uname)" == "Darwin" ]] || error "Esse script é apenas para macOS."
 
-command -v lvim >/dev/null || error "lvim não encontrado no PATH. Instala LunarVim primeiro."
+command -v nvim >/dev/null || error "nvim não encontrado no PATH. Instala Neovim primeiro (asdf install neovim)."
 [[ -d "/Applications/Ghostty.app" ]] || error "Ghostty.app não encontrado em /Applications."
 
 # ----- Remove instalação anterior se existir -----
@@ -57,13 +57,13 @@ cat > "$APP_DIR/Contents/Info.plist" <<'PLIST'
 <plist version="1.0">
 <dict>
     <key>CFBundleExecutable</key>
-    <string>open-in-lvim</string>
+    <string>open-in-nvim</string>
     <key>CFBundleIdentifier</key>
-    <string>local.openinlvim</string>
+    <string>local.openinnvim</string>
     <key>CFBundleName</key>
-    <string>Open in LunarVim</string>
+    <string>Open in Neovim</string>
     <key>CFBundleDisplayName</key>
-    <string>Open in LunarVim</string>
+    <string>Open in Neovim</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
@@ -109,18 +109,19 @@ PLIST
 cat > "$APP_DIR/Contents/MacOS/${EXECUTABLE_NAME}" <<'BASH'
 #!/bin/bash
 # Recebe caminhos via argv quando arquivo é aberto via "Open With".
-# Abre Ghostty rodando lvim com o arquivo (ou diretório).
+# Abre Ghostty rodando nvim com o arquivo (ou diretório).
 
 set -e
 
-# Garante PATH com locais comuns onde lvim e ghostty cli costumam viver
-export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$HOME/.local/bin:$PATH"
+# Garante PATH com locais comuns onde nvim e ghostty cli costumam viver
+# Inclui asdf shims pra pegar a versão de nvim gerenciada por asdf.
+export PATH="$HOME/.asdf/shims:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$HOME/.local/bin:$PATH"
 
 if [[ $# -eq 0 ]]; then
-    # Click no app sem arquivo: abre lvim na home
+    # Click no app sem arquivo: abre nvim na home
     open -na "Ghostty.app" --args \
         --working-directory="$HOME" \
-        -e "lvim"
+        -e "nvim"
     exit 0
 fi
 
@@ -132,11 +133,11 @@ if [[ -f "$file_path" ]]; then
     safe_path=$(printf %s "$file_path" | sed "s/'/'\\\\''/g")
     open -na "Ghostty.app" --args \
         --working-directory="$dir_path" \
-        -e "lvim '$safe_path'"
+        -e "nvim '$safe_path'"
 elif [[ -d "$file_path" ]]; then
     open -na "Ghostty.app" --args \
         --working-directory="$file_path" \
-        -e "lvim ."
+        -e "nvim ."
 else
     # Caminho inválido — abre Ghostty básico
     open -na "Ghostty.app"
@@ -161,12 +162,12 @@ echo
 info "Como usar:"
 echo "  1. No Finder, click direito num arquivo (ex: .ts, .md)"
 echo "  2. Open With → Other..."
-echo "  3. Selecione 'Open in LunarVim' (na pasta /Applications)"
+echo "  3. Selecione 'Open in Neovim' (na pasta /Applications)"
 echo "  4. Marque 'Always Open With' se quiser default pra esse tipo"
 echo
 info "Pra fazer default em TODOS arquivos de uma extensão:"
 echo "  1. Get Info no arquivo (⌘I)"
-echo "  2. Open With → 'Open in LunarVim'"
+echo "  2. Open With → 'Open in Neovim'"
 echo "  3. Click 'Change All...' → confirma"
 echo
 warn "Caso o app não apareça em 'Open With', reinicia o Finder ou o Mac."

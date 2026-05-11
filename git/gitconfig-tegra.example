@@ -1,0 +1,10 @@
+# ~/dotfiles/git/gitconfig-tegra.example
+#
+# Template versionado. O install.sh gera o gitconfig-tegra real
+# substituindo {{TEGRA_EMAIL}} pelo email do contexto Tegra.
+# O arquivo real é gitignored.
+#
+# Carregado via includeIf quando o repo está em ~/ws/tegra/
+
+[user]
+	email = {{TEGRA_EMAIL}}

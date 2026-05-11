@@ -1,8 +1,13 @@
-# ~/dotfiles/git/gitconfig-auditore
+# ~/dotfiles/git/gitconfig-auditore.example
+#
+# Template versionado. O install.sh gera o gitconfig-auditore real
+# substituindo {{AUDITORE_EMAIL}} pelo seu email corporativo.
+# O arquivo real é gitignored.
+#
 # Carregado via includeIf quando o repo está em ~/ws/auditore/ ou ~/ws/byd/
 
 [user]
-	email = edipo@auditore.com.br
+	email = {{AUDITORE_EMAIL}}
 
 # Adicione aqui qualquer config específica do contexto Auditore.
 # Exemplo: signing key diferente, hooks, etc.
