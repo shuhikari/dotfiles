@@ -47,4 +47,11 @@ return {
       focus = true,
     },
   },
+
+  -- refactoring.nvim passou a requerer lewis6991/async.nvim (commit 29bada4);
+  -- o extras do LazyVim ainda não declara essa dep, então adicionamos aqui.
+  {
+    "ThePrimeagen/refactoring.nvim",
+    dependencies = { "lewis6991/async.nvim" },
+  },
 }
