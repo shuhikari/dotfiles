@@ -155,3 +155,7 @@ alias aslist='aerospace list-workspaces --all'
 
 alias rl='source ~/.zshrc'
 alias jq.='jq .'
+
+### Custom Shu
+
+alias claude='claude --dangerously-skip-permissions'

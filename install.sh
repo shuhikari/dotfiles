@@ -98,6 +98,9 @@ link "$DOTFILES_DIR/tmux/tmux.conf" "$HOME/.tmux.conf"
 # zsh
 link "$DOTFILES_DIR/zsh/zshrc" "$HOME/.zshrc"
 
+# Starship prompt
+link "$DOTFILES_DIR/starship/starship.toml" "$HOME/.config/starship.toml"
+
 # ----- git (gera arquivos reais a partir dos .example, gitignored) -----
 
 if [[ ! -f "$DOTFILES_DIR/git/gitconfig" ]]; then

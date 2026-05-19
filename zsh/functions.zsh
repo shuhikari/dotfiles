@@ -120,3 +120,32 @@ mkcd() {
 # extract: descompacta qualquer formato comum
 # (oh-my-zsh já tem o plugin "extract", mas mantém aqui pra portabilidade)
 # Uso: extract arquivo.tar.gz
+
+# =====================================================================
+# ssh-agent persistente entre shells
+# =====================================================================
+#
+# Reusa o mesmo agent em todos os shells (passphrase digitada 1x por boot).
+# Sem isso, cada novo terminal precisa de `eval "$(ssh-agent -s)"` + ssh-add
+# pra que `git push` por SSH funcione.
+
+_ssh_agent_env="$HOME/.ssh/agent-env"
+
+if [[ -f $_ssh_agent_env ]] && source "$_ssh_agent_env" >/dev/null 2>&1 \
+   && kill -0 "${SSH_AGENT_PID:-0}" 2>/dev/null; then
+  :  # agent já rodando, reutilizado
+else
+  ssh-agent -s > "$_ssh_agent_env" 2>/dev/null \
+    && chmod 600 "$_ssh_agent_env" \
+    && source "$_ssh_agent_env" >/dev/null
+fi
+unset _ssh_agent_env
+
+# Adiciona chave padrão se existir e ainda não estiver no agent.
+if [[ -f $HOME/.ssh/id_ed25519 ]] && command -v ssh-add >/dev/null; then
+  _key_fp=$(ssh-keygen -lf "$HOME/.ssh/id_ed25519" 2>/dev/null | awk '{print $2}')
+  if [[ -n $_key_fp ]] && ! ssh-add -l 2>/dev/null | grep -q "$_key_fp"; then
+    ssh-add "$HOME/.ssh/id_ed25519" 2>/dev/null
+  fi
+  unset _key_fp
+fi
