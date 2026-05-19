@@ -26,8 +26,11 @@ Sim. Adicionar suporte oficial a WSL2 via:
 2. **`exports.zsh` cross-OS** — paths e env vars condicionais por OS, fallback gracioso
 3. **`aliases.zsh` com clipboard cross-OS** — `clip`/`paste` aliases que mapeiam
    pra `pbcopy`/`clip.exe`/`xclip` automaticamente
-4. **`wsl/setup.sh` automatizado** — instala Ubuntu deps (zsh, asdf, node 20,
-   neovim 0.11.2, eza, gh, starship, claude code) num único comando idempotente
+4. **`wsl/setup.sh` automatizado** — instala Ubuntu deps (zsh, asdf, node 22 LTS,
+   pnpm, bun, neovim 0.11.2, eza, gh, starship, claude code) num único comando
+   idempotente. Node 20 foi descartado depois que o corepack do 20.19 começou
+   a falhar em paralelo no Windows nativo; pnpm e bun agora vêm via plugins
+   asdf, sem depender de corepack.
 5. **`install.sh` consciente de OS** — symlinks específicos só onde fazem
    sentido (ex: aerospace.toml só em macOS)
 6. **`wsl/README.md`** — guia específico de WSL: pré-reqs Windows, performance

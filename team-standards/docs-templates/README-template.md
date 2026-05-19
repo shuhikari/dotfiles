@@ -9,22 +9,23 @@
 ## Stack
 
 - **Linguagem**: TypeScript 5.x
-- **Runtime**: Node.js 20 LTS
+- **Runtime**: Node.js 22 LTS
 - **Framework**: NestJS 10 / Angular 17 / Next.js 14 / etc.
 - **DB**: PostgreSQL 16 / MongoDB 7 / etc.
 - **ORM**: Prisma / TypeORM / etc.
-- **Package manager**: pnpm
+- **Package manager**: pnpm (preferido) / bun
 
 ## Pré-requisitos
 
 ```bash
-# Node
-nvm install 20
-nvm use 20
+# Node (asdf é o gerenciador padrão do time — vide wsl/setup.sh)
+asdf install nodejs latest:22
+asdf set -u nodejs "$(asdf latest nodejs 22)"
 
-# pnpm
-corepack enable
-corepack prepare pnpm@latest --activate
+# pnpm via asdf (não corepack — corepack do 20.19 falha em alguns setups)
+asdf plugin add pnpm https://github.com/jonathanmorley/asdf-pnpm.git
+asdf install pnpm latest
+asdf set -u pnpm "$(asdf latest pnpm)"
 
 # Docker (se necessário pro DB local)
 # Mac: brew install --cask docker

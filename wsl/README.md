@@ -39,12 +39,14 @@ O script é idempotente — pode rodar de novo sem quebrar nada.
 2. Instala ferramentas base: zsh, tmux, ripgrep, fd-find, bat, gh, jq, etc.
 3. Instala oh-my-zsh + plugins (zsh-autosuggestions, zsh-completions)
 4. Instala asdf 0.19+ (Go-based)
-5. Instala Node.js 20 via asdf, ativa pnpm via corepack
-6. Instala Neovim 0.11.2 via asdf
-7. Instala eza, gh CLI, starship
-8. Instala Claude Code CLI nativo
-9. Aplica symlinks dos dotfiles (`install.sh`)
-10. Mostra próximos passos
+5. Instala Node.js 22 LTS via asdf (latest patch do canal 22.x)
+6. Instala pnpm via asdf-pnpm (não corepack — corepack do 20.19 quebra)
+7. Instala bun via asdf-bun
+8. Instala Neovim 0.11.2 via asdf
+9. Instala eza, gh CLI, starship
+10. Instala Claude Code CLI nativo
+11. Aplica symlinks dos dotfiles (`install.sh`)
+12. Mostra próximos passos
 
 Tempo total estimado: 8-15 min dependendo de rede.
 

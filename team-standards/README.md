@@ -79,9 +79,9 @@ instalados, e que ambos estão no PATH do PowerShell/CMD.
 Em qualquer plataforma:
 
 ```
-- Node.js 20+ LTS
+- Node.js 22 LTS (Node 20 tem bug de corepack/pnpm em alguns setups Windows)
 - Git 2.40+ (Windows: Git for Windows com Git Bash)
-- npm, pnpm ou yarn (preferência: pnpm pelo time)
+- pnpm (preferência do time) ou bun; npm/yarn aceitos mas sem suporte ativo
 - gh CLI (opcional, pra PR creation via terminal)
 ```
 

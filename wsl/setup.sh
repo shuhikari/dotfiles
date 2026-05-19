@@ -102,23 +102,61 @@ else
 fi
 
 # ---------- Node via asdf ----------
+#
+# Usamos Node 22 LTS (não 20.x). Motivo: corepack do 20.19 dá pau em vários
+# setups (em especial quem testa o mesmo projeto no Windows nativo, onde o
+# corepack falha em atualizar o pnpm). 22 LTS evita isso e não temos
+# dependência travada no 20.
 
-step "Instalando Node.js 20 LTS"
+step "Instalando Node.js 22 LTS"
 
 if ! asdf plugin list 2>/dev/null | grep -q "^nodejs$"; then
   asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
 fi
 
-NODE_TARGET="20.18.1"
+# Resolve dinamicamente o latest do canal 22.x — evita travar em patch específico.
+NODE_TARGET="$(asdf latest nodejs 22)"
 if ! asdf list nodejs 2>/dev/null | grep -q "$NODE_TARGET"; then
   asdf install nodejs "$NODE_TARGET"
 fi
 asdf set -u nodejs "$NODE_TARGET"
+info "Node ativo: $NODE_TARGET"
 
-# Habilita corepack (vem com Node) e ativa pnpm
+# Garante shims resolvidos antes de seguir
 ~/.asdf/shims/node -e "" 2>/dev/null || true
-PATH="$HOME/.asdf/shims:$PATH" corepack enable
-PATH="$HOME/.asdf/shims:$PATH" corepack prepare pnpm@latest --activate
+
+# ---------- pnpm via asdf ----------
+#
+# Antes usávamos corepack. Trocamos pra plugin asdf nativo: instala binário
+# direto, sem depender da versão do Node nem do estado do corepack.
+
+step "Instalando pnpm via asdf"
+
+if ! asdf plugin list 2>/dev/null | grep -q "^pnpm$"; then
+  asdf plugin add pnpm https://github.com/jonathanmorley/asdf-pnpm.git
+fi
+
+PNPM_TARGET="$(asdf latest pnpm)"
+if ! asdf list pnpm 2>/dev/null | grep -q "$PNPM_TARGET"; then
+  asdf install pnpm "$PNPM_TARGET"
+fi
+asdf set -u pnpm "$PNPM_TARGET"
+info "pnpm ativo: $PNPM_TARGET"
+
+# ---------- bun via asdf ----------
+
+step "Instalando bun via asdf"
+
+if ! asdf plugin list 2>/dev/null | grep -q "^bun$"; then
+  asdf plugin add bun https://github.com/cometkim/asdf-bun.git
+fi
+
+BUN_TARGET="$(asdf latest bun)"
+if ! asdf list bun 2>/dev/null | grep -q "$BUN_TARGET"; then
+  asdf install bun "$BUN_TARGET"
+fi
+asdf set -u bun "$BUN_TARGET"
+info "bun ativo: $BUN_TARGET"
 
 # ---------- Neovim 0.11.2 via asdf ----------
 

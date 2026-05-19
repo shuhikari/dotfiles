@@ -75,16 +75,29 @@ Pra config completa: copia `~/dotfiles/git/gitconfig` pra `~/.gitconfig`
 
 ### 3. Node.js + pnpm
 
+> **Importante**: usa Node 22 LTS, não Node 20. O `corepack` do 20.19 trava
+> ao baixar o pnpm em alguns setups Windows (erro de SSL/integridade no
+> download do tarball). Setup do time padronizou em 22 LTS.
+
 ```powershell
+# Se instalou OpenJS.NodeJS.LTS pelo winget acima e ainda veio Node 20,
+# desinstala e instala a versão 22 explicitamente:
+winget uninstall OpenJS.NodeJS.LTS
+winget install --id OpenJS.NodeJS --version 22  # ou baixa do nodejs.org
+
 # Verifica
-node --version    # esperado: v20.x ou superior
+node --version    # esperado: v22.x
 npm --version
 
-# Habilita pnpm via corepack (vem com Node 16.13+)
-corepack enable
-corepack prepare pnpm@latest --activate
-
+# pnpm: prefira instalação direta (não corepack)
+# Motivo: corepack baixa o pnpm on-demand e em redes corporativas
+# Windows costuma falhar. `npm install -g` resolve de uma vez.
+npm install -g pnpm
 pnpm --version
+
+# bun (opcional)
+powershell -c "irm bun.sh/install.ps1 | iex"
+bun --version
 ```
 
 ### 4. Claude Code
