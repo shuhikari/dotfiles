@@ -47,7 +47,26 @@ sudo apt install -y \
   ca-certificates gnupg lsb-release \
   software-properties-common \
   xclip wslu \
-  python3 python3-pip python3-venv
+  python3 python3-pip python3-venv \
+  locales
+
+# ---------- Locale en_US.UTF-8 ----------
+#
+# zsh/exports.zsh seta LANG=en_US.UTF-8. Ubuntu mínimo (WSL) vem só com
+# C.UTF-8, então sem isso aparecem warnings "Cannot set LC_CTYPE" e
+# caracteres acentuados (ex.: "É" do nome do autor em git log) viram
+# caixinhas porque o fallback é locale C sem suporte multibyte.
+step "Gerando locale en_US.UTF-8"
+if ! locale -a 2>/dev/null | grep -qiE "^en_US\.utf-?8$"; then
+  sudo sed -i 's/^# *\(en_US.UTF-8 UTF-8\)/\1/' /etc/locale.gen
+  grep -q "^en_US.UTF-8 UTF-8" /etc/locale.gen || \
+    echo "en_US.UTF-8 UTF-8" | sudo tee -a /etc/locale.gen >/dev/null
+  sudo locale-gen en_US.UTF-8
+  sudo update-locale LANG=en_US.UTF-8
+  info "Locale en_US.UTF-8 gerado."
+else
+  info "Locale en_US.UTF-8 já disponível."
+fi
 
 # fd-find no Ubuntu instala como `fdfind` — cria symlink pra `fd`
 if ! command -v fd >/dev/null 2>&1; then
