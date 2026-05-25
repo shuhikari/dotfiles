@@ -167,6 +167,59 @@ ls -la ~/.claude/commands/             # deve listar review.md, spec.md, etc.
 
 Se não estiver linkado, roda `~/dotfiles/install.sh` de novo.
 
+### Só quero a config do Claude (sem clonar o repo inteiro)
+
+Útil se você não usa meu nvim/tmux/zsh mas quer as **diretrizes globais**
+(otimização de tokens via subagentes, regras de atribuição, ações destrutivas)
+e/ou os slash commands.
+
+**Opção 1 — copiar arquivos avulsos (mais simples):**
+
+```bash
+mkdir -p ~/.claude/commands
+
+# Diretrizes globais (orquestração de subagentes pra economia de tokens, regras de git, etc.)
+curl -fsSL https://raw.githubusercontent.com/shuhikari/dotfiles/main/claude/CLAUDE.md \
+  -o ~/.claude/CLAUDE.md
+
+# Slash commands (pegue só os que quiser)
+for cmd in review spec dotfiles-sync; do
+  curl -fsSL "https://raw.githubusercontent.com/shuhikari/dotfiles/main/claude/commands/${cmd}.md" \
+    -o "~/.claude/commands/${cmd}.md"
+done
+```
+
+Edite o `~/.claude/CLAUDE.md` à vontade — é seu agora, não recebe update
+automático.
+
+**Opção 2 — sparse checkout (mantém atualizado via `git pull`):**
+
+```bash
+git clone --filter=blob:none --no-checkout \
+  https://github.com/shuhikari/dotfiles.git ~/.claude-source
+cd ~/.claude-source
+git sparse-checkout init --cone
+git sparse-checkout set claude
+git checkout main
+
+# Linka só o que interessa
+ln -sf ~/.claude-source/claude/CLAUDE.md ~/.claude/CLAUDE.md
+mkdir -p ~/.claude/commands
+ln -sf ~/.claude-source/claude/commands/*.md ~/.claude/commands/
+
+# Pra atualizar depois:
+# cd ~/.claude-source && git pull
+```
+
+**O que você ganha levando só o `CLAUDE.md`:**
+
+- Delegação automática de leituras/buscas pra subagente `Explore` (read-only,
+  modelo mais barato) — economiza tokens do Opus.
+- Subagentes mecânicos rodam em Sonnet/Haiku por default.
+- Regras inegociáveis de atribuição (nada de `Co-Authored-By` ou `Generated with Claude Code`).
+- Confirmação obrigatória antes de qualquer ação git destrutiva.
+- Padrão de commit conventional, uma linha, sem corpo.
+
 ## Filosofia
 
 1. **Versão controlada** — toda mudança é commit. Histórico explica o porquê.
