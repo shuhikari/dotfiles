@@ -185,7 +185,7 @@ curl -fsSL https://raw.githubusercontent.com/shuhikari/dotfiles/main/claude/CLAU
 # Slash commands (pegue só os que quiser)
 for cmd in review spec dotfiles-sync; do
   curl -fsSL "https://raw.githubusercontent.com/shuhikari/dotfiles/main/claude/commands/${cmd}.md" \
-    -o "~/.claude/commands/${cmd}.md"
+    -o "$HOME/.claude/commands/${cmd}.md"
 done
 ```
 
