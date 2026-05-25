@@ -125,12 +125,25 @@ fi
 
 link "$DOTFILES_DIR/git/gitconfig" "$HOME/.gitconfig"
 
+# Claude Code — CLAUDE.md global (diretrizes valem em todos os projetos)
+mkdir -p "$HOME/.claude"
+link "$DOTFILES_DIR/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
+
 # Claude Code custom commands
 mkdir -p "$HOME/.claude/commands"
 for cmd in "$DOTFILES_DIR"/claude/commands/*.md; do
   [[ -e $cmd ]] || continue
   link "$cmd" "$HOME/.claude/commands/$(basename "$cmd")"
 done
+
+# Claude Code custom skills (se existir o diretório)
+if [[ -d "$DOTFILES_DIR/claude/skills" ]]; then
+  mkdir -p "$HOME/.claude/skills"
+  for skill in "$DOTFILES_DIR"/claude/skills/*; do
+    [[ -e $skill ]] || continue
+    link "$skill" "$HOME/.claude/skills/$(basename "$skill")"
+  done
+fi
 
 # ----- macOS-specific -----
 

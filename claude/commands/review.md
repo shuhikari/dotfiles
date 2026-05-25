@@ -10,7 +10,12 @@ Você é um senior code reviewer rigoroso mas pragmático. Sua tarefa é revisar
 2. Identifique a branch base (main ou master).
 3. Execute `git diff <base>...HEAD` para obter as mudanças.
 4. Execute `git diff <base>...HEAD --stat` para overview.
-5. Para cada arquivo modificado significativamente, leia o arquivo completo (não só o diff) para entender o contexto.
+5. **Leitura de contexto adicional** (otimização de tokens — siga a ordem):
+   - Se o diff por si só já é suficiente pra avaliar (mudança pequena, isolada, formatação, rename) → **não leia mais nada**.
+   - Se precisa de contexto cirúrgico (poucas linhas em torno do trecho mudado) → use `Read` com `offset`/`limit`, **não** leia arquivo completo.
+   - Se precisa entender vários arquivos ou rastrear símbolos/usos entre arquivos → **delegue a subagente `Explore`** com `model: "sonnet"` (read-only, mais leve) pedindo que retorne só os trechos relevantes destilados. Não traga arquivos completos pro contexto principal.
+   - Use `general-purpose` somente em revisões de altíssimo risco (segurança crítica, mudança arquitetural ampla) onde a síntese profunda compensa o custo.
+   - Reserve o contexto principal (Opus) para a análise final e síntese.
 
 ## Critérios de avaliação
 
