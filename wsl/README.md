@@ -91,6 +91,7 @@ Diferença prática:
 |---|---|
 | Abrir Explorer no diretório atual | `explorer.exe .` |
 | Abrir VSCode do Windows no projeto | `code .` |
+| Abrir MarkText (leitor de .md) | `mark` (alias — função em `functions.zsh`, ver `windows/marktext/`) |
 | Copia texto pro clipboard do Windows | `echo "texto" \| clip` (alias) |
 | Cola do clipboard do Windows | `paste` (alias) |
 | Abrir URL/arquivo com app default Windows | `wslview <arquivo-ou-url>` |
@@ -136,6 +137,7 @@ não rodam aqui. Use:
 | Raycast | PowerToys Run / Flow Launcher | No Windows |
 | Finder | Windows Explorer / `explorer.exe .` | |
 | Activity Monitor | Task Manager (Win) / `htop` (WSL) | |
+| Typora / Marked | MarkText | Free + OSS; integração em `windows/marktext/` |
 
 ## Troubleshooting
 

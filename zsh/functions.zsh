@@ -149,3 +149,27 @@ if [[ -f $HOME/.ssh/id_ed25519 ]] && command -v ssh-add >/dev/null; then
   fi
   unset _key_fp
 fi
+
+# =====================================================================
+# WSL: MarkText launcher
+# =====================================================================
+# Uso:
+#   mark              -> abre a pasta atual no MarkText
+#   mark README.md    -> abre arquivo
+#   mark some/dir     -> abre pasta
+
+if is_wsl; then
+  mark() {
+    local target="${1:-.}"
+    if [[ ! -e "$target" ]]; then
+      echo "mark: '$target' não existe" >&2
+      return 1
+    fi
+    local exe="/mnt/c/Users/$USER/AppData/Local/Programs/MarkText/MarkText.exe"
+    if [[ ! -x "$exe" ]]; then
+      echo "mark: MarkText.exe não encontrado em $exe" >&2
+      return 1
+    fi
+    "$exe" "$(wslpath -w "$(realpath "$target")")" >/dev/null 2>&1 &!
+  }
+fi

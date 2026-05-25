@@ -1,0 +1,7 @@
+Windows Registry Editor Version 5.00
+
+; Remove as entradas do menu de contexto do MarkText
+; instaladas por install.reg / apply.sh.
+
+[-HKEY_CURRENT_USER\Software\Classes\Directory\shell\MarkText]
+[-HKEY_CURRENT_USER\Software\Classes\Directory\Background\shell\MarkText]

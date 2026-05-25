@@ -1,0 +1,24 @@
+Windows Registry Editor Version 5.00
+
+; ============================================================
+; Template — substitua __WIN_USER__ pelo seu usuário do Windows
+; antes de aplicar, OU use ../marktext/apply.sh (auto-detecta).
+;
+; Escopo: HKEY_CURRENT_USER (não exige admin).
+; ============================================================
+
+; --- Botão direito SOBRE uma pasta ---
+[HKEY_CURRENT_USER\Software\Classes\Directory\shell\MarkText]
+@="Abrir com MarkText"
+"Icon"="C:\\Users\\__WIN_USER__\\AppData\\Local\\Programs\\MarkText\\MarkText.exe,0"
+
+[HKEY_CURRENT_USER\Software\Classes\Directory\shell\MarkText\command]
+@="\"C:\\Users\\__WIN_USER__\\AppData\\Local\\Programs\\MarkText\\MarkText.exe\" \"%1\""
+
+; --- Botão direito no FUNDO da pasta (espaço vazio dentro dela) ---
+[HKEY_CURRENT_USER\Software\Classes\Directory\Background\shell\MarkText]
+@="Abrir esta pasta com MarkText"
+"Icon"="C:\\Users\\__WIN_USER__\\AppData\\Local\\Programs\\MarkText\\MarkText.exe,0"
+
+[HKEY_CURRENT_USER\Software\Classes\Directory\Background\shell\MarkText\command]
+@="\"C:\\Users\\__WIN_USER__\\AppData\\Local\\Programs\\MarkText\\MarkText.exe\" \"%V\""

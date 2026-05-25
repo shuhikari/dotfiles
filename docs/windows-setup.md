@@ -50,6 +50,24 @@ winget install --id sharkdp.bat               # bat (cat com syntax highlight)
 
 Reinicia o terminal depois.
 
+#### Opcional: MarkText (leitor/editor de markdown)
+
+[MarkText](https://github.com/marktext/marktext) é o equivalente Windows do Typora/Marked do macOS — WYSIWYG, gratuito, OSS. Recomendado pra ler/editar a documentação do time (READMEs, ADRs, specs).
+
+```powershell
+# Sem entrada no winget; baixar o instalador direto:
+# https://github.com/marktext/marktext/releases  (escolhe o .exe ou .msi mais recente)
+```
+
+Após instalar, adicione a integração com o Windows Explorer ("Abrir com MarkText" no menu de contexto de pastas):
+
+```bash
+# Via WSL (recomendado — auto-detecta seu user Windows e não exige admin)
+bash ~/dotfiles/windows/marktext/apply.sh
+```
+
+Ou sem WSL: edite `~/dotfiles/windows/marktext/install.reg.template` substituindo `__WIN_USER__` pelo seu usuário, salve como `install.reg` e duplo-clique no File Explorer. Detalhes completos em [`windows/marktext/README.md`](../windows/marktext/README.md).
+
 ### 2. Git config
 
 ```bash
