@@ -110,6 +110,63 @@ git push
 git pull && ./install.sh
 ```
 
+## Claude Code (CLAUDE.md, commands e skills)
+
+Este repo versiona a config global do [Claude Code](https://claude.com/claude-code).
+O `install.sh` cria os symlinks automaticamente — não precisa copiar nada na mão.
+
+### O que é cada coisa
+
+| Arquivo / pasta no repo | Symlink criado | Pra que serve |
+|---|---|---|
+| `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | Diretrizes globais que o Claude lê **em toda conversa, em todo projeto**. Inclui regras de commit, ações destrutivas, atribuição, etc. |
+| `claude/commands/*.md` | `~/.claude/commands/*.md` | Slash commands pessoais. Ex: `/review`, `/spec`, `/dotfiles-sync` — basta digitar a `/` no prompt do Claude. |
+| `claude/skills/*` (opcional) | `~/.claude/skills/*` | Skills customizadas (workflows mais complexos que slash commands). |
+
+### Como adicionar uma diretriz global (CLAUDE.md)
+
+1. Abre `claude/CLAUDE.md` no editor.
+2. Adiciona a regra na seção apropriada (ou cria uma nova seção `## Nome`).
+3. Commit + push.
+4. Em **outras máquinas**, roda `~/dotfiles/install.sh` (ou usa o slash command `/dotfiles-sync`) pra puxar a mudança. Como é symlink, a máquina onde você editou já está atualizada na hora.
+
+### Como adicionar um slash command novo
+
+1. Cria `claude/commands/<nome>.md` — o arquivo é o próprio prompt que o Claude vai executar quando você digitar `/<nome>`.
+   ```markdown
+   ---
+   description: Descrição curta que aparece no autocomplete
+   ---
+
+   Instruções pro Claude executar quando o usuário rodar /<nome>.
+   ```
+2. Roda `~/dotfiles/install.sh` (linka o novo arquivo em `~/.claude/commands/`).
+3. Em outra sessão do Claude Code, `/<nome>` já aparece no autocomplete.
+
+Exemplos prontos: `claude/commands/review.md`, `claude/commands/spec.md`.
+
+### Como adicionar uma skill
+
+Skills são workflows mais elaborados (com sub-arquivos, scripts, etc.). Se não
+existir a pasta `claude/skills/` ainda, crie:
+
+```bash
+mkdir -p claude/skills/<nome-da-skill>
+```
+
+Adicione o conteúdo da skill nesse diretório (estrutura segue a doc oficial do
+Claude Code). Rode `~/dotfiles/install.sh` — ele detecta a pasta e linka
+automaticamente em `~/.claude/skills/`.
+
+### Testando se está funcionando
+
+```bash
+ls -la ~/.claude/CLAUDE.md             # deve ser symlink → ~/dotfiles/claude/CLAUDE.md
+ls -la ~/.claude/commands/             # deve listar review.md, spec.md, etc.
+```
+
+Se não estiver linkado, roda `~/dotfiles/install.sh` de novo.
+
 ## Filosofia
 
 1. **Versão controlada** — toda mudança é commit. Histórico explica o porquê.
