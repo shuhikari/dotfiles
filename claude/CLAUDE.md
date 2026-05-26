@@ -45,3 +45,12 @@ Regras inegociáveis pra todas as conversas. Otimize custo: subagentes baratos p
 
 - **bun** > npm. Evite yarn.
 - Lockfile existente manda — respeite, mas sinalize migração quando fizer sentido.
+
+## Versionamento de config e skills
+
+- Config do Claude Code (`CLAUDE.md`, comandos, skills) vive em **um de dois repos versionados**, nunca solta em `~/.claude/`:
+  - **Pessoal / cross-projeto** → `~/dotfiles/claude/` (`git@github.com:shuhikari/dotfiles.git`)
+  - **Auditore (time)** → `~/ws/auditore/auditore-skills/` (`git@github.com:auditoreie/auditore-skills.git`, ver `HOWTO.md` local)
+- Antes de criar/editar skill ou comando, **pergunte ao usuário em qual repo entra**. Não assuma.
+- Escreva direto no repo; o `install.sh` de cada repo cuida do symlink pra `~/.claude/`.
+- Commit em `auditore-skills` tipicamente exige PR/review — confirme antes de pushar direto em main.
