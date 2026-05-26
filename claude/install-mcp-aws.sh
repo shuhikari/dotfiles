@@ -72,15 +72,17 @@ add_server "aws-knowledge" \
 
 # 2/3. Documentation + Pricing — stdio via uvx
 if ensure_uv; then
+  # Nota: `claude mcp add` exige <name> ANTES das flags -e (o parser de -e é
+  # variádico e consome o nome se vier depois).
   add_server "aws-documentation" \
+    aws-documentation \
     -e FASTMCP_LOG_LEVEL=ERROR \
     -e AWS_DOCUMENTATION_PARTITION=aws \
-    aws-documentation \
     -- uvx awslabs.aws-documentation-mcp-server@latest
 
   add_server "aws-pricing" \
-    -e FASTMCP_LOG_LEVEL=ERROR \
     aws-pricing \
+    -e FASTMCP_LOG_LEVEL=ERROR \
     -- uvx awslabs.aws-pricing-mcp-server@latest
 fi
 
