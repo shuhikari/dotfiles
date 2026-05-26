@@ -122,6 +122,25 @@ O `install.sh` cria os symlinks automaticamente — não precisa copiar nada na 
 | `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | Diretrizes globais que o Claude lê **em toda conversa, em todo projeto**. Inclui regras de commit, ações destrutivas, atribuição, etc. |
 | `claude/commands/*.md` | `~/.claude/commands/*.md` | Slash commands pessoais. Ex: `/review`, `/spec`, `/dotfiles-sync` — basta digitar a `/` no prompt do Claude. |
 | `claude/skills/*` (opcional) | `~/.claude/skills/*` | Skills customizadas (workflows mais complexos que slash commands). |
+| `claude/install-mcp-aws.sh` (opcional) | — (não linka, é um script) | Adiciona MCPs da AWS (Knowledge + Documentation + Pricing) em escopo `user`. Rode `~/dotfiles/claude/install-mcp-aws.sh` quando quiser. |
+
+### MCPs opcionais (AWS)
+
+O `install.sh` principal **não** instala servidores MCP — eles ocupam contexto
+do Claude enquanto estão configurados, então fica opt-in. Pra adicionar a suíte
+oficial da AWS ([awslabs/mcp](https://github.com/awslabs/mcp)):
+
+```bash
+~/dotfiles/claude/install-mcp-aws.sh
+```
+
+Instala em escopo `user` (vale em todos os projetos):
+
+- **aws-knowledge** — HTTP remote, sem auth. Docs + blogs + What's New + Well-Architected.
+- **aws-documentation** — stdio via `uvx`. Só docs oficiais. Requer `uv` (o script instala se faltar).
+- **aws-pricing** — stdio via `uvx`. Pricing pra dimensionar custo.
+
+Pra remover depois: `claude mcp remove <nome> --scope user`.
 
 ### Como adicionar uma diretriz global (CLAUDE.md)
 
