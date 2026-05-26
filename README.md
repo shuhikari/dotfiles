@@ -120,6 +120,7 @@ O `install.sh` cria os symlinks automaticamente — não precisa copiar nada na 
 | Arquivo / pasta no repo | Symlink criado | Pra que serve |
 |---|---|---|
 | `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | Diretrizes globais que o Claude lê **em toda conversa, em todo projeto**. Inclui regras de commit, ações destrutivas, atribuição, etc. |
+| `claude/settings.json` | `~/.claude/settings.json` | Settings globais do Claude Code (theme, `attribution.commit: ""` pra suprimir Co-Authored-By, etc.). Loadado no startup da sessão. |
 | `claude/commands/*.md` | `~/.claude/commands/*.md` | Slash commands pessoais. Ex: `/review`, `/spec`, `/dotfiles-sync` — basta digitar a `/` no prompt do Claude. |
 | `claude/skills/*` (opcional) | `~/.claude/skills/*` | Skills customizadas (workflows mais complexos que slash commands). |
 | `claude/install-mcp-aws.sh` (opcional) | — (não linka, é um script) | Adiciona MCPs da AWS (Knowledge + Documentation + Pricing) em escopo `user`. Rode `~/dotfiles/claude/install-mcp-aws.sh` quando quiser. |

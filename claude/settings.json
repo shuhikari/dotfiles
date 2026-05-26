@@ -1,0 +1,8 @@
+{
+  "theme": "dark-ansi",
+  "skipDangerousModePermissionPrompt": true,
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  }
+}
