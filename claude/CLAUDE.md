@@ -19,6 +19,14 @@ Regras inegociáveis pra todas as conversas. Otimize custo: subagentes baratos p
 - Specs e notas longas → arquivo `.md`, não chat.
 - Troca de assunto → sugerir `/clear`.
 
+## MCP (ClickUp, etc.)
+
+- **Planeje antes de chamar.** Antes de usar o MCP do ClickUp (ou qualquer MCP externo pesado), mapeie todas as operações que serão feitas e estime o custo em tokens. Apresente o plano ao usuário se forem muitas chamadas (>5).
+- `detail_level: 'summary'` **sempre**, exceto quando for estritamente necessário ler description/custom fields completos. `summary` corta ~85% dos tokens (~116k → ~18k na mesma task).
+- `get_task` sem `detail_level` é a chamada mais cara do ClickUp (~30k tokens). Evite; use `summary` ou `filter_tasks` quando só precisa de status/id/nome.
+- Batch updates em paralelo (reduz round-trips) mas cada resposta JSON ainda consome tokens — contabilize.
+- `filter_tasks` traz até 100 tasks por página sem projeção de campos. Use filtros específicos (list_ids, statuses, tags) pra reduzir o volume.
+
 ## Comunicação
 
 - Updates entre tool calls: uma frase.
