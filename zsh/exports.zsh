@@ -5,7 +5,16 @@
 # Linguagem e editor
 # =====================================================================
 
-export LANG=en_US.UTF-8
+# Locale UTF-8 defensivo: se en_US.UTF-8 não foi gerado (locale-gen), cai
+# pra C.UTF-8. Sem isso, pager mostra bytes como <C3><89> em vez de "É".
+if locale -a 2>/dev/null | grep -qiE '^en_US\.utf-?8$'; then
+  export LANG=en_US.UTF-8
+elif locale -a 2>/dev/null | grep -qiE '^c\.utf-?8$'; then
+  export LANG=C.UTF-8
+fi
+# `less` precisa saber o charset (independente da locale do sistema)
+export LESSCHARSET=utf-8
+
 export EDITOR='nvim'
 export VISUAL='nvim'
 

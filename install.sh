@@ -148,6 +148,34 @@ if [[ -d "$DOTFILES_DIR/claude/skills" ]]; then
   done
 fi
 
+# ----- Claude Code — multi-perfil (credenciais isoladas por org/cliente) -----
+#
+# Cada perfil tem seu próprio CLAUDE_CONFIG_DIR em ~/.claude-profiles/<nome>/,
+# isolando .credentials.json (OAuth) e histórico. Configs compartilhados
+# (CLAUDE.md, settings.json, commands/, skills/) são symlinks pro dotfiles.
+# Setup inicial em cada perfil: `claude-profile <nome> && claude /login`.
+
+CLAUDE_PROFILES_DIR="$HOME/.claude-profiles"
+CLAUDE_PROFILES=(auditore hmax sintetiza)
+
+mkdir -p "$CLAUDE_PROFILES_DIR"
+chmod 0700 "$CLAUDE_PROFILES_DIR"
+
+for profile in "${CLAUDE_PROFILES[@]}"; do
+  profile_dir="$CLAUDE_PROFILES_DIR/$profile"
+  mkdir -p "$profile_dir"
+  chmod 0700 "$profile_dir"
+
+  # Symlinks pro config compartilhado (sobrescreve atomicamente com -fn)
+  ln -sfn "$DOTFILES_DIR/claude/CLAUDE.md"    "$profile_dir/CLAUDE.md"
+  ln -sfn "$DOTFILES_DIR/claude/settings.json" "$profile_dir/settings.json"
+  ln -sfn "$DOTFILES_DIR/claude/commands"     "$profile_dir/commands"
+  if [[ -d "$DOTFILES_DIR/claude/skills" ]]; then
+    ln -sfn "$DOTFILES_DIR/claude/skills" "$profile_dir/skills"
+  fi
+  info "Perfil Claude: $profile ($profile_dir)"
+done
+
 # ----- macOS-specific -----
 
 if [[ "$OS" == "macos" ]]; then

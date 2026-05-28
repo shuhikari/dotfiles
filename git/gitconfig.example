@@ -18,6 +18,11 @@
 	whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
 	editor = nvim
 	autocrlf = input
+	quotePath = false            # mostra UTF-8 em paths em vez de \303\211
+
+[i18n]
+	logOutputEncoding = utf-8    # garante log/show emitirem UTF-8
+	commitEncoding = utf-8
 
 # =====================================================================
 # Melhorias propostas (decisões em docs/adr/009-gitconfig-improvements.md)

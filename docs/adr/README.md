@@ -33,6 +33,7 @@ Template em [`team-standards/docs-templates/adr-template.md`](../../team-standar
 | [012](012-public-blog.md) | Blog técnico público | 🟡 Proposto |
 | [013](013-lunarvim-to-lazyvim-migration.md) | Migração de LunarVim pra LazyVim | ✅ Aceito |
 | [014](014-wsl2-support.md) | Suporte a WSL2 nos dotfiles | ✅ Aceito |
+| [015](015-claude-multi-credential-profiles.md) | Multi-perfil Claude Code via CLAUDE_CONFIG_DIR | ✅ Aceito |
 
 ## Como adicionar uma nova ADR
 
