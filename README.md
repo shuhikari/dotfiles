@@ -16,6 +16,7 @@ dotfiles/
 ├── git/                         gitconfig + conditional includes (auditore/tegra)
 ├── aerospace.toml               Tiling WM com workspace P pra apresentação
 ├── claude/commands/             /review e /spec slash commands
+├── claude/profile-switch.zsh    Multi-perfil (auditore/hmax/sintetiza) via CLAUDE_CONFIG_DIR
 ├── macos/                       Setup específico Mac (Open in Neovim, migração)
 │
 ├── team-standards/              Padrões cross-platform (Mac/Linux/Windows)
@@ -49,7 +50,8 @@ dotfiles/
         ├── 011 — Overseer no Oracle Free Tier
         ├── 012 — Blog técnico público
         ├── 013 — Migração LunarVim → LazyVim
-        └── 014 — Suporte a WSL2 nos dotfiles
+        ├── 014 — Suporte a WSL2 nos dotfiles
+        └── 015 — Multi-perfil Claude Code via CLAUDE_CONFIG_DIR
 ```
 
 ## Instalação
@@ -186,6 +188,134 @@ ls -la ~/.claude/commands/             # deve listar review.md, spec.md, etc.
 ```
 
 Se não estiver linkado, roda `~/dotfiles/install.sh` de novo.
+
+## Múltiplas credenciais Claude (profiles)
+
+Pra atender clientes/empresas diferentes (cada um com sua conta/plano Claude),
+o dotfiles suporta **3 perfis isolados** out-of-the-box: `auditore`, `hmax`,
+`sintetiza`. Cada perfil tem seu próprio `.credentials.json` (OAuth) e
+histórico, mas **compartilha** os configs comuns (`CLAUDE.md`, `settings.json`,
+`commands/`, `skills/`) via symlinks. Detalhes arquiteturais em
+[ADR-015](docs/adr/015-claude-multi-credential-profiles.md).
+
+### Como funciona
+
+`install.sh` cria a estrutura:
+
+```
+~/.claude-profiles/
+├── auditore/         (CLAUDE_CONFIG_DIR quando perfil ativo)
+│   ├── CLAUDE.md         → symlink pra ~/dotfiles/claude/CLAUDE.md
+│   ├── settings.json     → symlink pra ~/dotfiles/claude/settings.json
+│   ├── commands/         → symlink pra ~/dotfiles/claude/commands/
+│   ├── skills/           → symlink pra ~/dotfiles/claude/skills/  (se existir)
+│   ├── .credentials.json (gerado por `claude /login`, isolado)
+│   ├── projects/         (histórico isolado)
+│   └── .claude.json      (estado isolado)
+├── hmax/             (mesma estrutura)
+└── sintetiza/        (mesma estrutura)
+```
+
+A variável `CLAUDE_CONFIG_DIR` aponta o Claude Code pro perfil ativo.
+
+### Setup inicial (uma vez por máquina, por perfil)
+
+Depois de rodar `./install.sh` e `exec zsh`:
+
+```bash
+# Autentica cada perfil (browser abre uma vez por perfil)
+claude-profile auditore && claude /login
+claude-profile hmax     && claude /login
+claude-profile sintetiza && claude /login
+```
+
+WSL: se o callback OAuth do browser falhar (problema conhecido em WSL2), o
+Claude Code aceita o code colado manualmente no prompt `Paste code here if prompted`.
+
+### Uso dia-a-dia
+
+Três formas de operar:
+
+**1. Atalho num shot** — troca + roda `claude` direto:
+
+```bash
+cc-auditore        # equivalente a: CLAUDE_CONFIG_DIR=~/.claude-profiles/auditore claude
+cc-hmax
+cc-sintetiza
+```
+
+**2. Trocar a sessão atual** — pra rodar comandos arbitrários (`claude /status`, `claude mcp list`, scripts, etc.):
+
+```bash
+claude-profile auditore     # exporta CLAUDE_CONFIG_DIR na sessão atual
+claude                      # roda no perfil auditore
+claude mcp list             # também no perfil auditore
+```
+
+**3. Inspeção:**
+
+```bash
+claude-profile-list         # lista os 3 perfis
+claude-profile-current      # mostra perfil ativo (ou "default" se nenhum)
+```
+
+### Perfil padrão por máquina
+
+Pra abrir o terminal já com um perfil ativo, adiciona em `zsh/local.zsh`
+(gitignored, específico da máquina):
+
+```bash
+export CLAUDE_DEFAULT_PROFILE=auditore
+```
+
+O `profile-switch.zsh` aplica automaticamente no startup do shell.
+
+### Adicionar um novo perfil
+
+1. Edita `install.sh` e adiciona o nome no array `CLAUDE_PROFILES`:
+   ```bash
+   CLAUDE_PROFILES=(auditore hmax sintetiza novo-cliente)
+   ```
+2. Edita `claude/profile-switch.zsh` e adiciona um alias `cc-<nome>`:
+   ```bash
+   alias cc-novo-cliente='CLAUDE_CONFIG_DIR=$CLAUDE_PROFILES_DIR/novo-cliente claude'
+   ```
+3. Roda `./install.sh` (cria o dir + symlinks) e `exec zsh` (recarrega alias).
+4. Autentica: `claude-profile novo-cliente && claude /login`.
+5. Commit + push pras outras máquinas pegarem.
+
+### Remover um perfil
+
+```bash
+rm -rf ~/.claude-profiles/<nome>     # apaga credenciais + histórico (ação local, não afeta dotfiles)
+# Remove do array CLAUDE_PROFILES em install.sh e o alias em profile-switch.zsh
+```
+
+### Trocar conta dentro de um perfil
+
+```bash
+claude-profile <nome>
+claude /logout && claude /login
+```
+
+### Por que não API Keys?
+
+API key (`ANTHROPIC_API_KEY`) cobra **por token consumido** ao preço do
+console, sem teto. Planos Max/Teams via OAuth dão **uso pesado de Claude Code
+dentro de assinatura fixa** — muito mais barato pra quem usa horas/dia. O setup
+de perfis serve tanto pra OAuth quanto pra API key (se você setar
+`ANTHROPIC_API_KEY` no shell, ela vence o OAuth do perfil — útil pra testar
+override pontual).
+
+### Quando algo quebra
+
+| Sintoma | Solução |
+|---|---|
+| `claude-profile` não encontrado | `exec zsh` (recarregou `profile-switch.zsh`?) |
+| Perfil não isolando credenciais | `claude-profile-current` confirma `CLAUDE_CONFIG_DIR` setado? |
+| Symlinks no perfil quebrados | `./install.sh` recria (idempotente) |
+| Login não persiste entre sessões | Permissão do dir: `chmod 0700 ~/.claude-profiles/<nome>` |
+| `cc-<nome>` abre sem o `--dangerously-skip-permissions` | Alias `claude` em `aliases.zsh` precisa existir (chain expand) |
 
 ### Só quero a config do Claude (sem clonar o repo inteiro)
 
