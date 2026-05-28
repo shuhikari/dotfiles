@@ -53,6 +53,9 @@ for module in exports aliases functions; do
   [[ -f $module_file ]] && source "$module_file"
 done
 
+# Claude Code — multi-perfil de credenciais (CLAUDE_CONFIG_DIR por org)
+[[ -f "$DOTFILES/claude/profile-switch.zsh" ]] && source "$DOTFILES/claude/profile-switch.zsh"
+
 # Local overrides (não comitado, específico da máquina)
 [[ -f "$DOTFILES/zsh/local.zsh" ]] && source "$DOTFILES/zsh/local.zsh"
 

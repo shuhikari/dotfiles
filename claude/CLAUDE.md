@@ -62,3 +62,12 @@ Regras inegociáveis pra todas as conversas. Otimize custo: subagentes baratos p
 - Antes de criar/editar skill ou comando, **pergunte ao usuário em qual repo entra**. Não assuma.
 - Escreva direto no repo; o `install.sh` de cada repo cuida do symlink pra `~/.claude/`.
 - Commit em `auditore-skills` tipicamente exige PR/review — confirme antes de pushar direto em main.
+
+## Múltiplas credenciais (Claude profiles)
+
+- Três perfis disponíveis: `auditore`, `hmax`, `sintetiza`. Cada um tem seu próprio `CLAUDE_CONFIG_DIR` em `~/.claude-profiles/<nome>/`, isolando `.credentials.json` (OAuth) e histórico. Configs compartilhados (`CLAUDE.md`, `settings.json`, `commands/`, `skills/`) são symlinks pro `~/dotfiles/claude/`.
+- Trocar perfil na sessão atual: `claude-profile <nome>` (exporta `CLAUDE_CONFIG_DIR`).
+- Atalhos: `cc-auditore`, `cc-hmax`, `cc-sintetiza` — troca + roda `claude` num shot.
+- Inspeção: `claude-profile-current`, `claude-profile-list`.
+- Setup inicial em cada máquina (por perfil): `claude-profile <nome> && claude /login`.
+- Definir perfil padrão por máquina: `export CLAUDE_DEFAULT_PROFILE=<nome>` em `zsh/local.zsh`.
