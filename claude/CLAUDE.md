@@ -58,7 +58,7 @@ Regras inegociáveis pra todas as conversas. Otimize custo: subagentes baratos p
 
 - Config do Claude Code (`CLAUDE.md`, comandos, skills) vive em **um de dois repos versionados**, nunca solta em `~/.claude/`:
   - **Pessoal / cross-projeto** → `~/dotfiles/claude/` (`git@github.com:shuhikari/dotfiles.git`)
-  - **Auditore (time)** → `~/ws/auditore/auditore-skills/` (`git@github.com:auditoreie/auditore-skills.git`, ver `HOWTO.md` local)
+  - **Skills de time (Auditore + Sintetiza)** → `~/ws/auditore/auditore-skills/` (`team-skills`). Espelhado em **dois repos** (orgs separadas, sem seats compartilhados): primário `git@github.com:auditoreie/team-skills.git` (`origin`) e espelho `https://github.com/Sintetiza-AI/team-skills.git` (`sintetiza`). Ambos recebem PRs; reconciliação via `SYNC.md`. Skills organizadas por ferramenta sob `skills/<ferramenta>/`.
 - Antes de criar/editar skill ou comando, **pergunte ao usuário em qual repo entra**. Não assuma.
-- Escreva direto no repo; o `install.sh` de cada repo cuida do symlink pra `~/.claude/`.
-- Commit em `auditore-skills` tipicamente exige PR/review — confirme antes de pushar direto em main.
+- Escreva direto no repo; o `install.sh` de cada repo cuida do symlink pra `~/.claude/` (recursa `skills/**/SKILL.md`).
+- Commit em `team-skills` tipicamente exige PR/review — confirme antes de pushar direto em main. Mudança estrutural → sincronize nos dois remotes (`git push origin main && git push sintetiza main`).
