@@ -22,6 +22,7 @@ Regras inegociáveis pra todas as conversas. Otimize custo: subagentes baratos p
 
 - Leituras → `Explore`; síntese fica no Opus.
 - `diff` + `Read` com `offset`/`limit` no entorno das mudanças > ler arquivo inteiro.
+- **Custo do reviewer**: o fork multi-agente do `/code-review` (herda o modelo da sessão, 9-10 finders) só pra mudança CRÍTICA — dinheiro, segurança, multi-tenant, schema/migração. PR rotineira → 1 agente `sonnet` com checklist focado. **Bypass**: se o usuário pedir "review profunda/pesada/completa", usar o fork multi-agente sem questionar, em qualquer PR.
 
 ## Contexto
 
