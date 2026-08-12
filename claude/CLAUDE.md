@@ -8,6 +8,16 @@ Regras inegociáveis pra todas as conversas. Otimize custo: subagentes baratos p
 - `Plan` pra projetar sem executar. `general-purpose` só se precisar raciocínio + escrita + múltiplas tools.
 - Subagente mecânico → `model: "sonnet"` ou `"haiku"`. Opus só pra trade-offs reais.
 
+## Limites de execução local (16GB — 2 crashes por OOM em 11-12/08/2026)
+
+- Até **4 agentes background por sessão**; destes, no máximo **2 executando teste/build simultaneamente** (os outros 2 em leitura/escrita/worktree). Frente pesada extra = fila.
+- Test runners (jest/vitest/etc.) SEMPRE com limite de workers (`--maxWorkers=2` ou equivalente), em **foreground**, uma suíte por vez. Suíte COMPLETA de um projeto: 1 por vez na máquina inteira.
+- Builds (ng/webpack/vite): contam como slot de execução; nunca 2 builds do mesmo app em paralelo.
+- Prompts de agente devem embutir esses limites + proibição de rodar testes em background (agente esperando job morto = travamento clássico).
+- Worktrees com schema/codegen divergente (ex.: Prisma client compartilhado): regenerar SÓ na própria vez de teste, com exclusividade (nenhum outro test runner ativo).
+- Antes de nova onda: `ps aux | grep -cE '[n]ode'` — muito acima do normal (~15), investigar/matar órfãos antes de despachar. Pós-crash: sempre caçar processos órfãos primeiro.
+- Tarefa focada com um único terminal ponta a ponta (com reviewer): pode exceder pontualmente, com monitoramento de memória.
+
 ## Code review
 
 - Leituras → `Explore`; síntese fica no Opus.
@@ -58,7 +68,7 @@ Regras inegociáveis pra todas as conversas. Otimize custo: subagentes baratos p
 
 - Config do Claude Code (`CLAUDE.md`, comandos, skills) vive em **um de dois repos versionados**, nunca solta em `~/.claude/`:
   - **Pessoal / cross-projeto** → `~/dotfiles/claude/` (`git@github.com:shuhikari/dotfiles.git`)
-  - **Skills de time (Auditore + Sintetiza)** → `~/ws/auditore/auditore-skills/` (`team-skills`). Espelhado em **dois repos** (orgs separadas, sem seats compartilhados): primário `git@github.com:auditoreie/team-skills.git` (`origin`) e espelho `https://github.com/Sintetiza-AI/team-skills.git` (`sintetiza`). Ambos recebem PRs; reconciliação via `SYNC.md`. Skills organizadas por ferramenta sob `skills/<ferramenta>/`.
+  - **Skills de time (Auditore)** → `~/ws/auditore/auditore-skills/` — remote único `git@github.com:auditoreie/leap-of-faith-skills.git` (`origin`). O espelho da Sintetiza foi descontinuado; não há mais `SYNC.md` nem reconciliação entre remotes. Skills agrupadas por área sob `skills/<area>/` (`engenharia`, `gestao`, `integracoes`).
 - Antes de criar/editar skill ou comando, **pergunte ao usuário em qual repo entra**. Não assuma.
 - Escreva direto no repo; o `install.sh` de cada repo cuida do symlink pra `~/.claude/` (recursa `skills/**/SKILL.md`).
-- Commit em `team-skills` tipicamente exige PR/review — confirme antes de pushar direto em main. Mudança estrutural → sincronize nos dois remotes (`git push origin main && git push sintetiza main`).
+- Commit em `leap-of-faith-skills` tipicamente exige PR/review — confirme antes de pushar direto em main.
