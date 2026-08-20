@@ -17,25 +17,10 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   spec = {
-    -- LazyVim core (importa todos os plugins padrão)
+    -- LazyVim core. Importa lazyvim/plugins/, que inclui xtras.lua — este lê a lista
+    -- de extras do lazyvim.json e faz os imports. Fonte única: gerencie com :LazyExtras,
+    -- não com { import = "lazyvim.plugins.extras.*" } aqui.
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-
-    -- Extras: módulos opcionais oficiais do LazyVim
-    { import = "lazyvim.plugins.extras.lang.typescript" },
-    { import = "lazyvim.plugins.extras.lang.json" },
-    { import = "lazyvim.plugins.extras.lang.docker" },
-    { import = "lazyvim.plugins.extras.lang.markdown" },
-    { import = "lazyvim.plugins.extras.lang.prisma" },
-    { import = "lazyvim.plugins.extras.linting.eslint" },
-    { import = "lazyvim.plugins.extras.lang.typescript.biome" },
-    { import = "lazyvim.plugins.extras.editor.aerial" },
-    { import = "lazyvim.plugins.extras.editor.refactoring" },
-    { import = "lazyvim.plugins.extras.editor.telescope" },
-    -- { import = "lazyvim.plugins.extras.coding.copilot" }, -- comenta se não usar Copilot
-    { import = "lazyvim.plugins.extras.dap.core" },
-    { import = "lazyvim.plugins.extras.test.core" },
-    { import = "lazyvim.plugins.extras.util.dot" },
-    -- { import = "lazyvim.plugins.extras.ui.mini-animate" },
 
     -- Customizações próprias
     { import = "plugins" },
@@ -44,7 +29,7 @@ require("lazy").setup({
     lazy = false,    -- LazyVim já lida com lazy-loading inteligente
     version = false, -- master/HEAD (LazyVim em master é estável)
   },
-  install = { colorscheme = { "tokyonight", "habamax" } },
+  install = { colorscheme = { "tokyonight-night", "habamax" } },
   checker = { enabled = true, notify = false },  -- check de updates em silêncio
   performance = {
     rtp = {
