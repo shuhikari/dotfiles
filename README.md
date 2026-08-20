@@ -10,7 +10,7 @@ dotfiles/
 ├── README.md                    Este arquivo
 ├── install.sh                   Symlinks dos dotfiles (cross-OS: macOS/WSL/Linux)
 │
-├── nvim/                        LazyVim config (vtsls, inlay hints, telescope LSP)
+├── nvim/                        LazyVim + overrides do Omarchy (ver nvim/README.md)
 ├── tmux/                        Sessões persistentes, splits, vim-style nav
 ├── zsh/                         Modular: zshrc + exports + aliases + functions
 ├── git/                         gitconfig + conditional includes (auditore/tegra)
