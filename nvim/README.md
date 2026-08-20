@@ -25,6 +25,55 @@ Os extras vivem **só** em `lazyvim.json`. O `lua/config/lazy.lua` não deve con
 
 Gerencie com `:LazyExtras` (`x` habilita/desabilita).
 
+## Layout
+
+Não há configuração de layout: é o padrão do LazyVim. O que dá a cara de IDE são
+defaults do próprio LazyVim — `laststatus = 3` (statusline global), bufferline no topo,
+`signcolumn = "yes"` e `relativenumber` (`lazyvim/config/options.lua`).
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│ bufferline — abas dos buffers abertos                            │
+├─────────────┬─────────────────────────────┬──────────────────────┤
+│  neo-tree   │   miolo                     │  claude              │
+│  esquerda   │   (splits de edição)        │  direita, 30%        │
+│  40 colunas │                             │  <leader>ac abre     │
+├─────────────┴─────────────────────────────┴──────────────────────┤
+│ lualine — statusline global, atravessa tudo                      │
+└──────────────────────────────────────────────────────────────────┘
+
+     flutuantes por cima: picker, lazygit, terminal, which-key
+```
+
+neo-tree em `position = "left"`, `width = 40` (default do próprio neo-tree; o extra do
+LazyVim não sobrescreve). Painel do Claude em `split_side = "right"`,
+`split_width_percentage = 0.30` (`claudecode.nvim/lua/claudecode/terminal.lua`).
+
+### Navegar entre os slots
+
+| Tecla | Ação |
+|---|---|
+| `Ctrl+h` / `j` / `k` / `l` | Janela à esquerda / abaixo / acima / à direita |
+| `Ctrl+w w` | Cicla pela próxima janela (o que o manual do Omarchy ensina) |
+| `Ctrl+w p` | Volta para a janela anterior |
+| `Ctrl+w <Space>` | Window Hydra Mode — repete comandos de janela pelo which-key |
+| `<Space>-` / `<Space>\|` | Split horizontal / vertical |
+
+### Terminal embutido
+
+| Tecla | Ação |
+|---|---|
+| `Ctrl+/` (ou `Ctrl+_`) | Abre/foca o terminal flutuante na raiz do projeto |
+| `<Space>ft` / `<Space>fT` | Terminal na raiz do projeto / no cwd |
+
+Dentro do terminal o Neovim fica em *terminal mode* e engole `Ctrl+hjkl` — eles vão
+para o shell. Para sair: **`Esc` `Esc`** (dois toques em até 200 ms, o `term_normal` do
+snacks) volta ao modo normal e libera a navegação; ou `Ctrl+/` dispensa a janela direto.
+Em modo normal dentro do terminal, `q` esconde.
+
+O mesmo vale para o painel do Claude: com `provider = "auto"` e snacks instalado, ele usa
+o provider do snacks, então `Esc` `Esc` também funciona lá.
+
 ## Cheatsheet
 
 Picker = **snacks**, explorer = **neo-tree** (a combinação do Omarchy).
