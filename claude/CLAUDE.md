@@ -38,10 +38,36 @@ Regras inegociáveis pra todas as conversas. Otimize custo: subagentes baratos p
 - Batch updates em paralelo (reduz round-trips) mas cada resposta JSON ainda consome tokens — contabilize.
 - `filter_tasks` traz até 100 tasks por página sem projeção de campos. Use filtros específicos (list_ids, statuses, tags) pra reduzir o volume.
 
+## Títulos de task (ClickUp, Plane, qualquer tracker)
+
+- **Título é informativo, não é rótulo.** Quem lê o board sem abrir a task tem que entender o que está sendo feito e por quê. Título que só nomeia a área ("E-mails", "Investigar bug", "Ajuste no dash") é rejeitado.
+- Fórmula: **ação + objeto específico + resultado/critério esperado**. Ex.: `Mapear gatilhos e destinatários de todos os e-mails transacionais e remover CTA de dashboard nos e-mails ao pagador` — não `Investigar e-mails`.
+- Evite: verbos vagos sozinhos (`Revisar`, `Verificar`, `Melhorar`), siglas sem contexto, e título que só repete o nome do módulo.
+- Contexto de negócio > contexto técnico: prefira o efeito observável ("pagador recebe e-mail com botão que não leva a lugar nenhum") a jargão interno.
+- Vale pra task, subtask, ADR, branch e PR — o mesmo critério de "agrega valor a quem lê de fora".
+
 ## Comunicação
 
 - Updates entre tool calls: uma frase.
 - Final: direto, sem repetir o diff.
+
+## Fontes e pontos de entrada (regra inegociável)
+
+- **Toda afirmação sobre plataforma/serviço externo** (Google, Meta, Asaas, Cielo, GCP, AWS…)
+  **vem acompanhada da URL da fonte** — doc oficial, changelog ou página de política.
+  Conclusão sem link não é verificável e não deve ser entregue.
+- **Toda ação que alguém precisa executar vem com o link de ONDE executar**: formulário de
+  cadastro, console, painel de admin, página de solicitação. "Submeter o formulário de
+  interesse" sem o endereço do formulário é tarefa incompleta — quem executa não viu a
+  pesquisa e não deve ter que caçar o ponto de entrada.
+- Vale para **task, ADR, PR, plano e resposta no chat**. Em task é ainda mais crítico:
+  ela é lida fora do contexto onde a investigação aconteceu.
+- **Separe o que foi aberto e verificado do que é conhecido mas não conferido** nesta
+  sessão; marque o segundo explicitamente. **Nunca invente URL plausível** — sem o link
+  exato, diga que falta confirmar e aponte a página que leva até ele.
+- Prazos, limites e políticas de terceiros (SLA, tolerância, timeout, custo) sempre com a
+  fonte ao lado; se a doc for ambígua ou contraditória, registre a contradição em vez de
+  escolher o número mais conveniente.
 
 ## Atribuição
 
