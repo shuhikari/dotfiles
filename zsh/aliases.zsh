@@ -159,3 +159,14 @@ alias jq.='jq .'
 ### Custom Shu
 
 alias claude='claude --dangerously-skip-permissions'
+
+# =====================================================================
+# Claude Code — skills
+# =====================================================================
+# skills-sync → ver functions.zsh (pull do repo de skills + relink)
+
+# =====================================================================
+# Neovim
+# =====================================================================
+# alias do Omarchy: `n` abre o diretório atual, `n arquivo` abre o arquivo
+alias n='nvim'
