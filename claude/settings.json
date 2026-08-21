@@ -1,8 +1,27 @@
 {
-  "theme": "dark-ansi",
-  "skipDangerousModePermissionPrompt": true,
   "attribution": {
     "commit": "",
     "pr": ""
-  }
+  },
+  "permissions": {
+    "allow": [
+      "mcp__pencil"
+    ]
+  },
+  "model": "opus[1m]",
+  "enabledPlugins": {
+    "swift-lsp@claude-plugins-official": true
+  },
+  "language": "Portuguese",
+  "effortLevel": "xhigh",
+  "tui": "fullscreen",
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark-ansi",
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
+  "voiceEnabled": true
 }
