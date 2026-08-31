@@ -131,8 +131,11 @@ mkcd() {
 
 _ssh_agent_env="$HOME/.ssh/agent-env"
 
+# Valida conectando no socket de verdade: checar só o PID (kill -0) dá falso
+# positivo após reboot, quando o PID salvo é reutilizado por outro processo.
+# ssh-add -l retorna 2 = não conectou; 0/1 = agent vivo (com/sem chaves).
 if [[ -f $_ssh_agent_env ]] && source "$_ssh_agent_env" >/dev/null 2>&1 \
-   && kill -0 "${SSH_AGENT_PID:-0}" 2>/dev/null; then
+   && { ssh-add -l >/dev/null 2>&1; [[ $? -ne 2 ]]; }; then
   :  # agent já rodando, reutilizado
 else
   ssh-agent -s > "$_ssh_agent_env" 2>/dev/null \
@@ -173,3 +176,48 @@ if is_wsl; then
     "$exe" "$(wslpath -w "$(realpath "$target")")" >/dev/null 2>&1 &!
   }
 fi
+
+# =====================================================================
+# Claude Code — skills
+# =====================================================================
+
+# skills-sync: atualiza o repo de skills do time e refaz os symlinks em
+# ~/.claude/skills.
+#
+# A limpeza dos órfãos ANTES do install.sh não é cosmética: o script testa
+# `-L`, que é verdadeiro para symlink quebrado também. Quando uma skill muda
+# de pasta no repo, ele vê "link existente apontando para outro lugar" e
+# pergunta [y/N] por skill — default N, então um Enter distraído deixa a
+# skill morta e o resumo diz "pulado" em vez de erro.
+#
+# Uso:
+#   skills-sync              -> pull + relink
+#   skills-sync --no-pull    -> só relink (repo já atualizado / offline)
+#
+# Repo em outro caminho: export AUDITORE_SKILLS_DIR=/caminho/do/repo
+skills-sync() {
+  local repo="${AUDITORE_SKILLS_DIR:-$HOME/ws/auditore/auditore-skills}"
+
+  if [[ ! -x "$repo/install.sh" ]]; then
+    echo "skills-sync: install.sh não encontrado em $repo" >&2
+    echo "  ajuste com: export AUDITORE_SKILLS_DIR=/caminho/do/repo" >&2
+    return 1
+  fi
+
+  if [[ "$1" != "--no-pull" ]]; then
+    echo "==> git pull em $repo"
+    git -C "$repo" pull --ff-only ||
+      echo "skills-sync: pull falhou (working tree sujo? branch divergente?). Seguindo com o que está em disco." >&2
+  fi
+
+  echo "==> removendo symlinks órfãos em ~/.claude/skills"
+  local link
+  for link in "$HOME"/.claude/skills/*(N); do
+    if [[ -L "$link" && ! -e "$link" ]]; then
+      rm "$link" && echo "  removido: ${link:t}"
+    fi
+  done
+
+  echo "==> install.sh"
+  "$repo/install.sh"
+}

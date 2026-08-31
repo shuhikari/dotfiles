@@ -8,10 +8,21 @@ Regras inegociáveis pra todas as conversas. Otimize custo: subagentes baratos p
 - `Plan` pra projetar sem executar. `general-purpose` só se precisar raciocínio + escrita + múltiplas tools.
 - Subagente mecânico → `model: "sonnet"` ou `"haiku"`. Opus só pra trade-offs reais.
 
+## Limites de execução local (16GB — 2 crashes por OOM em 11-12/08/2026)
+
+- Até **4 agentes background por sessão**; destes, no máximo **2 executando teste/build simultaneamente** (os outros 2 em leitura/escrita/worktree). Frente pesada extra = fila.
+- Test runners (jest/vitest/etc.) SEMPRE com limite de workers (`--maxWorkers=2` ou equivalente), em **foreground**, uma suíte por vez. Suíte COMPLETA de um projeto: 1 por vez na máquina inteira.
+- Builds (ng/webpack/vite): contam como slot de execução; nunca 2 builds do mesmo app em paralelo.
+- Prompts de agente devem embutir esses limites + proibição de rodar testes em background (agente esperando job morto = travamento clássico).
+- Worktrees com schema/codegen divergente (ex.: Prisma client compartilhado): regenerar SÓ na própria vez de teste, com exclusividade (nenhum outro test runner ativo).
+- Antes de nova onda: `ps aux | grep -cE '[n]ode'` — muito acima do normal (~15), investigar/matar órfãos antes de despachar. Pós-crash: sempre caçar processos órfãos primeiro.
+- Tarefa focada com um único terminal ponta a ponta (com reviewer): pode exceder pontualmente, com monitoramento de memória.
+
 ## Code review
 
 - Leituras → `Explore`; síntese fica no Opus.
 - `diff` + `Read` com `offset`/`limit` no entorno das mudanças > ler arquivo inteiro.
+- **Custo do reviewer**: o fork multi-agente do `/code-review` (herda o modelo da sessão, 9-10 finders) só pra mudança CRÍTICA — dinheiro, segurança, multi-tenant, schema/migração. PR rotineira → 1 agente `sonnet` com checklist focado. **Bypass**: se o usuário pedir "review profunda/pesada/completa", usar o fork multi-agente sem questionar, em qualquer PR.
 
 ## Contexto
 
@@ -27,10 +38,38 @@ Regras inegociáveis pra todas as conversas. Otimize custo: subagentes baratos p
 - Batch updates em paralelo (reduz round-trips) mas cada resposta JSON ainda consome tokens — contabilize.
 - `filter_tasks` traz até 100 tasks por página sem projeção de campos. Use filtros específicos (list_ids, statuses, tags) pra reduzir o volume.
 
+## Títulos de task (ClickUp, Plane, qualquer tracker)
+
+- **Título é informativo, não é rótulo.** Quem lê o board sem abrir a task tem que entender o que está sendo feito e por quê. Título que só nomeia a área ("E-mails", "Investigar bug", "Ajuste no dash") é rejeitado.
+- Fórmula: **ação + objeto específico + resultado/critério esperado**. Ex.: `Mapear gatilhos e destinatários de todos os e-mails transacionais e remover CTA de dashboard nos e-mails ao pagador` — não `Investigar e-mails`.
+- Evite: verbos vagos sozinhos (`Revisar`, `Verificar`, `Melhorar`), siglas sem contexto, e título que só repete o nome do módulo.
+- Contexto de negócio > contexto técnico: prefira o efeito observável ("pagador recebe e-mail com botão que não leva a lugar nenhum") a jargão interno.
+- Vale pra task, subtask, ADR, branch e PR — o mesmo critério de "agrega valor a quem lê de fora".
+
 ## Comunicação
 
 - Updates entre tool calls: uma frase.
 - Final: direto, sem repetir o diff.
+- Sem hedging nem tom inseguro sobre o que foi implementado: afirme o que foi feito e testado em uma linha. Não liste o que NÃO foi feito, salvo se bloquear a entrega.
+- Risco só quando exige decisão do usuário, em uma frase. Zero recapitulação. No máximo uma pergunta, no fim.
+
+## Fontes e pontos de entrada (regra inegociável)
+
+- **Toda afirmação sobre plataforma/serviço externo** (Google, Meta, Asaas, Cielo, GCP, AWS…)
+  **vem acompanhada da URL da fonte** — doc oficial, changelog ou página de política.
+  Conclusão sem link não é verificável e não deve ser entregue.
+- **Toda ação que alguém precisa executar vem com o link de ONDE executar**: formulário de
+  cadastro, console, painel de admin, página de solicitação. "Submeter o formulário de
+  interesse" sem o endereço do formulário é tarefa incompleta — quem executa não viu a
+  pesquisa e não deve ter que caçar o ponto de entrada.
+- Vale para **task, ADR, PR, plano e resposta no chat**. Em task é ainda mais crítico:
+  ela é lida fora do contexto onde a investigação aconteceu.
+- **Separe o que foi aberto e verificado do que é conhecido mas não conferido** nesta
+  sessão; marque o segundo explicitamente. **Nunca invente URL plausível** — sem o link
+  exato, diga que falta confirmar e aponte a página que leva até ele.
+- Prazos, limites e políticas de terceiros (SLA, tolerância, timeout, custo) sempre com a
+  fonte ao lado; se a doc for ambígua ou contraditória, registre a contradição em vez de
+  escolher o número mais conveniente.
 
 ## Atribuição
 
@@ -58,7 +97,7 @@ Regras inegociáveis pra todas as conversas. Otimize custo: subagentes baratos p
 
 - Config do Claude Code (`CLAUDE.md`, comandos, skills) vive em **um de dois repos versionados**, nunca solta em `~/.claude/`:
   - **Pessoal / cross-projeto** → `~/dotfiles/claude/` (`git@github.com:shuhikari/dotfiles.git`)
-  - **Auditore (time)** → `~/ws/auditore/auditore-skills/` (`git@github.com:auditoreie/auditore-skills.git`, ver `HOWTO.md` local)
+  - **Skills de time (Auditore)** → `~/ws/auditore/auditore-skills/` — remote único `git@github.com:auditoreie/leap-of-faith-skills.git` (`origin`). O espelho da Sintetiza foi descontinuado; não há mais `SYNC.md` nem reconciliação entre remotes. Skills agrupadas por área sob `skills/<area>/` (`engenharia`, `gestao`, `integracoes`).
 - Antes de criar/editar skill ou comando, **pergunte ao usuário em qual repo entra**. Não assuma.
-- Escreva direto no repo; o `install.sh` de cada repo cuida do symlink pra `~/.claude/`.
-- Commit em `auditore-skills` tipicamente exige PR/review — confirme antes de pushar direto em main.
+- Escreva direto no repo; o `install.sh` de cada repo cuida do symlink pra `~/.claude/` (recursa `skills/**/SKILL.md`).
+- Commit em `leap-of-faith-skills` tipicamente exige PR/review — confirme antes de pushar direto em main.

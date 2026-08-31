@@ -10,13 +10,13 @@ dotfiles/
 ├── README.md                    Este arquivo
 ├── install.sh                   Symlinks dos dotfiles (cross-OS: macOS/WSL/Linux)
 │
-├── nvim/                        LazyVim config (vtsls, inlay hints, telescope LSP)
+├── nvim/                        LazyVim + overrides do Omarchy (ver nvim/README.md)
 ├── tmux/                        Sessões persistentes, splits, vim-style nav
 ├── zsh/                         Modular: zshrc + exports + aliases + functions
 ├── git/                         gitconfig + conditional includes (auditore/tegra)
 ├── aerospace.toml               Tiling WM com workspace P pra apresentação
 ├── claude/commands/             /review e /spec slash commands
-├── macos/                       Setup específico Mac (Open in Neovim, migração)
+├── macos/                       Utilitários Mac (Open in Neovim, migração, pendrive Windows)
 │
 ├── team-standards/              Padrões cross-platform (Mac/Linux/Windows)
 │   ├── setup-project.sh         Instala husky+biome+knip num projeto
@@ -64,6 +64,22 @@ cd ~/dotfiles
 # Opcional
 ./macos/setup-open-in-nvim.sh   # Finder → Open With Neovim
 ```
+
+### Pendrive bootável do Windows (macOS)
+
+`macos/make-windows-usb.sh` grava uma ISO do Windows num pendrive bootável por UEFI.
+Lida com o teto de 4 GiB por arquivo do FAT32 fatiando o `install.wim` em `.swm`
+com `wimlib` — necessário porque o firmware UEFI só garante boot de FAT32/FAT16.
+
+```bash
+brew install wimlib
+diskutil list                                    # descobre o identificador do pendrive
+./macos/make-windows-usb.sh -d disk4 -s ~/Downloads/Win11.iso -n WIN11
+```
+
+Aceita `.iso` (monta e desmonta sozinho) ou um volume já montado. Recusa disco
+interno ou partição (`diskNsM`), pede `APAGAR` digitado antes de formatar, e
+verifica os arquivos de boot no fim. `--scheme GPT` se o firmware recusar MBR.
 
 ### WSL2 (Windows)
 
