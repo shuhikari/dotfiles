@@ -50,6 +50,8 @@ Regras inegociáveis pra todas as conversas. Otimize custo: subagentes baratos p
 
 - Updates entre tool calls: uma frase.
 - Final: direto, sem repetir o diff.
+- Sem hedging nem tom inseguro sobre o que foi implementado: afirme o que foi feito e testado em uma linha. Não liste o que NÃO foi feito, salvo se bloquear a entrega.
+- Risco só quando exige decisão do usuário, em uma frase. Zero recapitulação. No máximo uma pergunta, no fim.
 
 ## Fontes e pontos de entrada (regra inegociável)
 
