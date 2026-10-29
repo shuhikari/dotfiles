@@ -7,6 +7,7 @@ Regras inegociáveis pra todas as conversas. Otimize custo: subagentes baratos p
 - Busca, grep, leitura ampla, exploração → `Explore`. Não polua contexto principal.
 - `Plan` pra projetar sem executar. `general-purpose` só se precisar raciocínio + escrita + múltiplas tools.
 - Subagente mecânico → `model: "sonnet"` ou `"haiku"`. Opus só pra trade-offs reais.
+- Subagente sem `model` explícito roda em Sonnet (`CLAUDE_CODE_SUBAGENT_MODEL=sonnet` no `settings.json`). O orquestrador escolhe outro modelo conforme complexidade e risco do que despacha, e responde por essa escolha. Despacho de desenvolvimento segue a skill `despachar-dev` (ficha + `model` explícito + tag `[C·R]`).
 
 ## Code review
 

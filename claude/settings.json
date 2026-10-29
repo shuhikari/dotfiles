@@ -4,5 +4,22 @@
   "attribution": {
     "commit": "",
     "pr": ""
+  },
+  "cleanupPeriodDays": 365,
+  "env": {
+    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet"
+  },
+  "hooks": {
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.claude/skills/overseer/scripts/horas.py\" sync --hook",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
   }
 }
